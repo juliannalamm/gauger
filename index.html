@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Gouging Checker</title>
+</head>
+<body>
+    <h1>Rental Price Gouging Checker</h1>
+    <form id="price-check-form">
+        <label for="url">Rental Listing URL:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Check Price</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('price-check-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const url = document.getElementById('url').value;
+
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url }),
+            });
+
+            const result = await response.json();
+            const resultDiv = document.getElementById('result');
+            if (response.ok) {
+                resultDiv.innerHTML = `
+                    <p>Current Price: $${result.current_price}</p>
+                    <p>Historical Price: $${result.historical_price}</p>
+                    <p>Percentage Increase: ${result.percentage_increase.toFixed(2)}%</p>
+                    <p><strong>${result.is_price_gouging ? 'This may be price gouging!' : 'No price gouging detected.'}</strong></p>
+                `;
+            } else {
+                resultDiv.innerHTML = `<p>Error: ${result.error}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
