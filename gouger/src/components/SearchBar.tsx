@@ -21,7 +21,7 @@ export default function SearchBar({ onSearch, isLoaded }: { onSearch: (query: st
         e.preventDefault(); 
         if (!query.trim()) {
              alert("Enter a valid ZIP code or address.") // if only whitespace
-             return;
+             return
         } 
         onSearch(query.trim());
     };
