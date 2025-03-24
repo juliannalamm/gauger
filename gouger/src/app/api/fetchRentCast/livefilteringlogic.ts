@@ -10,66 +10,29 @@ if (!RENTCAST_API_KEY) {
 }
 
 export async function GET(req: Request) {
-  // Extract search parameters (moved to top for both modes)
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get("query");
-  const limit = searchParams.get("limit") || "50";
-
-  if (!query) {
-    return NextResponse.json(
-      { error: "A ZIP code or address is required" },
-      { status: 400 }
-    );
-  }
-
-  // DEVELOPMENT MODE: Filter local JSON data based on query
+  // In development mode, return local JSON data to avoid extra API calls
   if (process.env.NODE_ENV === "development") {
-    console.log("Development mode: filtering local rentals data");
-    let params: Record<string, string> = {};
-    const parts = query.replace(", USA", "").trim().split(",").map((part) => part.trim());
-
-    if (parts.length === 2) {
-      // "City, State ZIP"
-      const stateZipParts = parts[1].split(" ");
-      if (stateZipParts.length === 2) {
-        params = { city: parts[0], state: stateZipParts[0], zipCode: stateZipParts[1] };
-      }
-    } else if (parts.length === 3) {
-      // "Street, City, State ZIP"
-      const stateZipParts = parts[2].split(" ");
-      if (stateZipParts.length === 2) {
-        params = { address: parts[0], city: parts[1], state: stateZipParts[0], zipCode: stateZipParts[1] };
-      }
-    } else {
-      console.warn("Query format did not match expected cases, using raw query for filtering");
-      params = { city: query };
-    }
-
-    // Filter localRentals based on matching properties (case-insensitive)
-    const filteredRentals = localRentals.filter((rental: any) => {
-      let match = true;
-      if (params.city) {
-        match = match && rental.city && rental.city.toLowerCase().includes(params.city.toLowerCase());
-      }
-      if (params.state) {
-        match = match && rental.state && rental.state.toLowerCase().includes(params.state.toLowerCase());
-      }
-      if (params.zipCode) {
-        match = match && rental.zipCode && rental.zipCode.toString().includes(params.zipCode);
-      }
-      if (params.address) {
-        match = match && rental.address && rental.address.toLowerCase().includes(params.address.toLowerCase());
-      }
-      return match;
-    });
-    return NextResponse.json(filteredRentals.slice(0, Number(limit)));
+    console.log("Development mode: returning local rentals data");
+    return NextResponse.json(localRentals);
   }
 
-  // PRODUCTION MODE: Live API call to RentCast
   try {
     console.log("Using RentCast API Key:", RENTCAST_API_KEY);
 
-    // Parse query into address components to address Google autofill formatting issues
+    // Extract search parameters
+    const { searchParams } = new URL(req.url);
+    const query = searchParams.get("query");
+    const limit = searchParams.get("limit") || "50";
+
+    if (!query) {
+      return NextResponse.json(
+        { error: "A ZIP code or address is required" },
+        { status: 400 }
+      );
+    }
+    
+
+    // Parse query into address components to address Google autofill formatting issues with RentCast
     let params: Record<string, string> = { status: "Active", limit: limit.toString() };
     const parts = query.replace(", USA", "").trim().split(",").map((part) => part.trim());
 
