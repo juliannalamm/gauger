@@ -2,6 +2,8 @@
 
 import React, { useEffect } from "react";
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import { getMarkerIcon } from "../lib/markerIcon"; // adjust the path if needed
+
 
 const containerStyle = {
   width: "100%",
@@ -21,7 +23,7 @@ interface MapProps {
 }
 
 const MapComponent: React.FC<MapProps> = ({ rentals, center }) => {
-  // If rentals available, use first rental's coordinates as center.
+  // If rentals available, use first rental's coordinates as center. this allows us to see the markers
   const defaultCenter =
     center ||
     (rentals.length > 0
@@ -53,10 +55,11 @@ const MapComponent: React.FC<MapProps> = ({ rentals, center }) => {
             key={index}
             position={{ lat, lng }}
             title={rental.formattedAddress}
+            icon={getMarkerIcon(Number(rental.price))}
           />
         );
       })}
-      {/* Uncomment for testing: */}
+      {/* TESTING */}
       {/* <Marker position={{ lat: 34.052235, lng: -118.243683 }} title="Test Marker" /> */}
     </GoogleMap>
   );

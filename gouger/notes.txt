@@ -1,0 +1,2 @@
+API end point is located in page.tsx, when search typed in it fetches rentals from route.ts and stores the rentals in 
+rentals state. Frome there, the rentals are passed from page.tsx to map.tsx and rendered on the map. 
