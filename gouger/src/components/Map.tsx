@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import React, {useState, useEffect } from "react";
+import { GoogleMap, Marker, useLoadScript, InfoWindow } from "@react-google-maps/api";
 import { getMarkerIcon } from "../lib/markerIcon"; // adjust the path if needed
 
 
@@ -15,6 +15,7 @@ interface Rental {
   price: number;
   latitude: number | string;
   longitude: number | string;
+  //TODO: Add more fields like bed/bath, squareFoot etc.
 }
 
 interface MapProps {
@@ -29,6 +30,9 @@ const MapComponent: React.FC<MapProps> = ({ rentals, center }) => {
     (rentals.length > 0
       ? { lat: Number(rentals[0].latitude), lng: Number(rentals[0].longitude) }
       : { lat: 34.052235, lng: -118.243683 });
+  
+  // State for tracking which rental (if any) is selected (clicked)
+  const [selectedRental, setSelectedRental] = useState<Rental | null>(null);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API as string,
@@ -56,9 +60,30 @@ const MapComponent: React.FC<MapProps> = ({ rentals, center }) => {
             position={{ lat, lng }}
             title={rental.formattedAddress}
             icon={getMarkerIcon(Number(rental.price))}
+            onClick={() => setSelectedRental(rental)}
           />
         );
       })}
+
+      {/* Only render InfoWindow if a rental is selected */}
+      {selectedRental && (
+        <InfoWindow
+          position={{
+            lat: Number(selectedRental.latitude),
+            lng: Number(selectedRental.longitude),
+          }}
+          onCloseClick={() => setSelectedRental(null)}
+        >
+          <div className="text-black p-2 rounded-md max-w-xs">
+            <h2 className="m-0 font-bold">{selectedRental.formattedAddress}</h2>
+            <p className="mt-1">
+              ${selectedRental.price}/mo
+              </p>
+              </div>
+        </InfoWindow>
+      )}
+
+
       {/* TESTING */}
       {/* <Marker position={{ lat: 34.052235, lng: -118.243683 }} title="Test Marker" /> */}
     </GoogleMap>

@@ -63,7 +63,6 @@ export default function Home() {
       <ul className="mt-4 w-full max-w-md">
         {rentals.map((rental, index) => (
           <li key={index} className="text-gray-900 p-2">
-            {rental.formattedAddress} - 💰 ${rental.price}/month
           </li>
         ))}
       </ul>
