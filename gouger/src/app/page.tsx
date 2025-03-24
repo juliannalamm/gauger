@@ -3,6 +3,7 @@
 import { useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { useLoadScript, Libraries } from "@react-google-maps/api";
+import MapComponent from "../components/Map";
 
 const libraries: Libraries = ["places"]; 
 
@@ -34,7 +35,8 @@ export default function Home() {
 
     } catch (error) {
       console.error(" Error fetching rentals:", error);
-      setRentals([]);
+      setRentals([]); 
+
     } finally {
       setLoading(false);
     }
@@ -46,26 +48,28 @@ export default function Home() {
   /// UI 
   return (
     <div className="flex flex-col h-screen items-center justify-center bg-white-100">
-      <header className="absolute top-4 text-6xl font-bold text-red-500">
-        Gouger
-      </header>
-
-      <SearchBar onSearch={handleSearch} isLoaded={isLoaded} />
-
-      {loading && <p>Loading...</p>}
-
-
-      {rentals.length > 0 ? (
-        <ul>
-          {rentals.map((rental, index) => (
-            <li key={index} className="text-gray-900 p-2">
-              {rental.formattedAddress} - 💰 ${rental.price}/month
-            </li>
-          ))}
-        </ul>
-      ) : (
-        !loading && <p>No listings found.</p>
-      )}
-    </div>
+  <header className="absolute top-4 text-6xl font-bold text-red-500">
+    Gouger
+  </header>
+      
+  {/* Full-width map container */}
+  <div className="w-[800px] max-w-5xl mx-auto h-[400px] mb-10">
+    <MapComponent rentals={rentals} />
+  </div>
+  <SearchBar onSearch={handleSearch} isLoaded={isLoaded} />
+    {loading && <p>Loading...</p>}
+    
+    {rentals.length > 0 ? (
+      <ul className="mt-4 w-full max-w-md">
+        {rentals.map((rental, index) => (
+          <li key={index} className="text-gray-900 p-2">
+            {rental.formattedAddress} - 💰 ${rental.price}/month
+          </li>
+        ))}
+      </ul>
+    ) : (
+      !loading && <p>No listings found.</p>
+    )}
+  </div>
   );
 }
