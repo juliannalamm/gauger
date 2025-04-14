@@ -44,29 +44,18 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen items-center justify-center bg-white-100">
-      <header className="absolute top-4 text-6xl font-bold text-red-500">
+      <header className="absolute top-4 text-6xl font-bold text-red-500 z-10">
         Gouger
       </header>
-
-      <div className="w-[800px] max-w-5xl mx-auto h-[400px] mb-10">
+  
+      <div className="w-[800px] max-w-5xl mx-auto h-[400px] mb-10 mt-20">
         <MapComponent rentals={rentals} />
       </div>
-
+  
       <SearchBar onSearch={handleSearch} isLoaded={isLoaded} />
-
-      {loading && <p>Loading...</p>}
-
-      {rentals.length > 0 ? (
-        <ul className="mt-4 w-full max-w-md">
-          {rentals.map((rental, index) => (
-            <li key={index} className="text-gray-900 p-2">
-              {/* You can add rental details here */}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        !loading && <p>No listings found.</p>
-      )}
+  
+      {loading && <p className="mt-2">Loading...</p>}
     </div>
   );
+  
 }
