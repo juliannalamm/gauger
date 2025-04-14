@@ -22,11 +22,19 @@ const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
       : { lat: 34.052235, lng: -118.243683 });
 
   useEffect(() => {
-    if (isLoaded && window.google && inputRef.current && !autocompleteRef.current) {
-      const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-        fields: ["formatted_address"],
-        types: ["geocode"],
-      });
+    if (
+      isLoaded &&
+      window.google &&
+      inputRef.current &&
+      !autocompleteRef.current
+    ) {
+      const autocomplete = new window.google.maps.places.Autocomplete(
+        inputRef.current,
+        {
+          fields: ["formatted_address"],
+          types: ["geocode"],
+        }
+      );
 
       autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
@@ -42,15 +50,8 @@ const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <div className="relative">
-      {/* Search input overlaid on map */}
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="Enter address or ZIP code"
-        className="absolute top-2 left-1/2 transform -translate-x-1/2 z-10 w-[32rem] p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg shadow bg-white focus:ring-blue-500 focus:border-blue-500"
-      />
-
+    <div className="w-full flex flex-col items-center">
+      {/* Map */}
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={defaultCenter}
@@ -90,6 +91,33 @@ const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
           </InfoWindow>
         )}
       </GoogleMap>
+
+      {/* Search input below map (no button, autocomplete only) */}
+      <div className="mt-4 w-[32rem] relative">
+        <input
+          ref={inputRef}
+          type="text"
+          id="autocomplete-input"
+          placeholder="Enter address or ZIP code"
+          className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg shadow bg-white focus:ring-blue-500 focus:border-blue-500"
+        />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg
+            className="w-4 h-4 text-gray-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };
