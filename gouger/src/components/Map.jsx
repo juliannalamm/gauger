@@ -9,17 +9,16 @@ const containerStyle = {
   height: "400px",
 };
 
-const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
+const LOS_ANGELES = { lat: 34.052235, lng: -118.243683 };
+
+const MapComponent = ({ rentals, isLoaded, onSearch }) => {
   const mapRef = useRef(null);
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
-  const [selectedRental, setSelectedRental] = useState(null);
 
-  const defaultCenter =
-    center ||
-    (rentals.length > 0
-      ? { lat: Number(rentals[0].latitude), lng: Number(rentals[0].longitude) }
-      : { lat: 34.052235, lng: -118.243683 });
+  const [selectedRental, setSelectedRental] = useState(null);
+  const [mapCenter, setMapCenter] = useState(LOS_ANGELES);
+  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     if (
@@ -31,7 +30,7 @@ const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
       const autocomplete = new window.google.maps.places.Autocomplete(
         inputRef.current,
         {
-          fields: ["formatted_address"],
+          fields: ["formatted_address", "geometry"],
           types: ["geocode"],
         }
       );
@@ -40,6 +39,13 @@ const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
         const place = autocomplete.getPlace();
         if (place?.formatted_address) {
           onSearch(place.formatted_address);
+          setHasSearched(true);
+        }
+
+        if (place.geometry?.location) {
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+          setMapCenter({ lat, lng });
         }
       });
 
@@ -52,47 +58,49 @@ const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
   return (
     <div className="w-full flex flex-col items-center">
       {/* Map */}
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={defaultCenter}
-        zoom={12}
-        onLoad={(map) => (mapRef.current = map)}
-      >
-        {rentals.map((rental, index) => {
-          const lat = Number(rental.latitude);
-          const lng = Number(rental.longitude);
-          if (isNaN(lat) || isNaN(lng)) {
-            console.warn("Invalid coordinates for rental:", rental);
-            return null;
-          }
-          return (
-            <Marker
-              key={index}
-              position={{ lat, lng }}
-              title={rental.formattedAddress}
-              icon={getMarkerIcon(Number(rental.price))}
-              onClick={() => setSelectedRental(rental)}
-            />
-          );
-        })}
+      <div className="w-full max-w-5xl">
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={mapCenter}
+          zoom={12}
+          onLoad={(map) => (mapRef.current = map)}
+        >
+          {rentals.map((rental, index) => {
+            const lat = Number(rental.latitude);
+            const lng = Number(rental.longitude);
+            if (isNaN(lat) || isNaN(lng)) {
+              console.warn("Invalid coordinates for rental:", rental);
+              return null;
+            }
+            return (
+              <Marker
+                key={index}
+                position={{ lat, lng }}
+                title={rental.formattedAddress}
+                icon={getMarkerIcon(Number(rental.price))}
+                onClick={() => setSelectedRental(rental)}
+              />
+            );
+          })}
 
-        {selectedRental && (
-          <InfoWindow
-            position={{
-              lat: Number(selectedRental.latitude),
-              lng: Number(selectedRental.longitude),
-            }}
-            onCloseClick={() => setSelectedRental(null)}
-          >
-            <div className="text-black p-2 rounded-md max-w-xs">
-              <h2 className="m-0 font-bold">{selectedRental.formattedAddress}</h2>
-              <p className="mt-1">${selectedRental.price}/mo</p>
-            </div>
-          </InfoWindow>
-        )}
-      </GoogleMap>
+          {selectedRental && (
+            <InfoWindow
+              position={{
+                lat: Number(selectedRental.latitude),
+                lng: Number(selectedRental.longitude),
+              }}
+              onCloseClick={() => setSelectedRental(null)}
+            >
+              <div className="text-black p-2 rounded-md max-w-xs">
+                <h2 className="m-0 font-bold">{selectedRental.formattedAddress}</h2>
+                <p className="mt-1">${selectedRental.price}/mo</p>
+              </div>
+            </InfoWindow>
+          )}
+        </GoogleMap>
+      </div>
 
-      {/* Search input below map (no button, autocomplete only) */}
+      {/* Search input below map */}
       <div className="mt-4 w-[32rem] relative">
         <input
           ref={inputRef}
@@ -118,6 +126,13 @@ const MapComponent = ({ rentals, center, isLoaded, onSearch }) => {
           </svg>
         </div>
       </div>
+
+      {/* No rentals message */}
+      {hasSearched && rentals.length === 0 && (
+        <p className="mt-4 text-gray-500 text-sm italic">
+          No rentals found for this location.
+        </p>
+      )}
     </div>
   );
 };
