@@ -24,18 +24,28 @@ export async function GET(req) {
   // DEVELOPMENT MODE: Filter local JSON data based on query
   if (process.env.NODE_ENV === "development") {
     console.log("Development mode: filtering local rentals data");
+
     let params = {};
     const parts = query.replace(", USA", "").trim().split(",").map((part) => part.trim());
 
     if (parts.length === 2) {
       const stateZipParts = parts[1].split(" ");
       if (stateZipParts.length === 2) {
-        params = { city: parts[0], state: stateZipParts[0], zipCode: stateZipParts[1] };
+        params = {
+          city: parts[0],
+          state: stateZipParts[0],
+          zipCode: stateZipParts[1],
+        };
       }
     } else if (parts.length === 3) {
       const stateZipParts = parts[2].split(" ");
       if (stateZipParts.length === 2) {
-        params = { address: parts[0], city: parts[1], state: stateZipParts[0], zipCode: stateZipParts[1] };
+        params = {
+          address: parts[0],
+          city: parts[1],
+          state: stateZipParts[0],
+          zipCode: stateZipParts[1],
+        };
       }
     } else {
       console.warn("Query format did not match expected cases, using raw query for filtering");
@@ -44,25 +54,30 @@ export async function GET(req) {
 
     const filteredRentals = localRentals.filter((rental) => {
       let match = true;
-      if (params.city) {
-        match = match && rental.city && rental.city.toLowerCase().includes(params.city.toLowerCase());
+
+      if (params.zipCode) {
+        match = match && rental.zipCode && rental.zipCode.toString().includes(params.zipCode);
+      } else {
+        if (params.city) {
+          match = match && rental.city && rental.city.toLowerCase().includes(params.city.toLowerCase());
+        }
       }
+
       if (params.state) {
         match = match && rental.state && rental.state.toLowerCase().includes(params.state.toLowerCase());
       }
-      if (params.zipCode) {
-        match = match && rental.zipCode && rental.zipCode.toString().includes(params.zipCode);
-      }
+
       if (params.address) {
         match = match && rental.address && rental.address.toLowerCase().includes(params.address.toLowerCase());
       }
+
       return match;
     });
 
     return NextResponse.json(filteredRentals.slice(0, Number(limit)));
   }
 
-  // PRODUCTION MODE: Live API call to RentCast
+  // PRODUCTION MODE (leave this unchanged or remove if unused)
   try {
     console.log("Using RentCast API Key:", RENTCAST_API_KEY);
 

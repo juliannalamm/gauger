@@ -23772,5 +23772,461 @@
           "daysOnMarket": 38
         }
       }
+    },
+
+  {
+    "id": "2106-W-166th-St,-Torrance,-CA-90504",
+    "formattedAddress": "2106 W 166th St, Torrance, CA 90504",
+    "addressLine1": "2106 W 166th St",
+    "addressLine2": null,
+    "city": "Torrance",
+    "state": "CA",
+    "zipCode": "90504",
+    "county": "Los Angeles",
+    "latitude": 33.879899,
+    "longitude": -118.315931,
+    "propertyType": "Single Family",
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "squareFootage": 2326,
+    "lotSize": 6003,
+    "yearBuilt": 1967,
+    "status": "Active",
+    "price": 5250,
+    "listingType": "Standard",
+    "listedDate": "2025-01-12T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2025-01-13T00:00:00.000Z",
+    "lastSeenDate": "2025-04-14T05:25:33.377Z",
+    "daysOnMarket": 93,
+    "mlsName": "TheMLSCLAW",
+    "mlsNumber": "25-480743",
+    "listingAgent": {
+      "name": "Earley Schick & Associates",
+      "phone": "3104903068",
+      "email": "michael@earleyschick.com",
+      "website": "http://www.earleyschick.com"
+    },
+    "listingOffice": {
+      "name": "eXp Realty of California Inc.",
+      "phone": "8888327179",
+      "email": "ray@raymarquez.com",
+      "website": "https://ca.exprealty.com/"
+    },
+    "history": {
+      "2025-01-12": {
+        "event": "Rental Listing",
+        "price": 5250,
+        "listingType": "Standard",
+        "listedDate": "2025-01-12T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 93
+      }
     }
+  },
+  {
+    "id": "687-S-Hobart-Blvd,-Apt-312,-Los-Angeles,-CA-90005",
+    "formattedAddress": "687 S Hobart Blvd, Apt 312, Los Angeles, CA 90005",
+    "addressLine1": "687 S Hobart Blvd",
+    "addressLine2": "Apt 312",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90005",
+    "county": "Los Angeles",
+    "latitude": 34.060516,
+    "longitude": -118.305603,
+    "propertyType": "Single Family",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "squareFootage": 888,
+    "yearBuilt": 2018,
+    "status": "Active",
+    "price": 3301,
+    "listingType": "Standard",
+    "listedDate": "2025-01-12T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2020-07-05T08:09:20.553Z",
+    "lastSeenDate": "2025-04-14T05:25:33.376Z",
+    "daysOnMarket": 93,
+    "mlsName": "TheMLSCLAW",
+    "mlsNumber": "25-480827",
+    "listingAgent": {
+      "name": "Niko Deleon",
+      "phone": "8335253273",
+      "email": "realtorniko@gmail.com",
+      "website": "http://www.nikolaleasing.com"
+    },
+    "listingOffice": {
+      "name": "Keller Williams Realty Los Feliz",
+      "phone": "3233001001",
+      "email": "ycallumpage@aol.com",
+      "website": "www.kwlosfeliz.com"
+    },
+    "history": {
+      "2025-01-12": {
+        "event": "Rental Listing",
+        "price": 3301,
+        "listingType": "Standard",
+        "listedDate": "2025-01-12T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 93
+      }
+    }
+  },
+  {
+    "id": "3345-Oakhurst-Ave,-Los-Angeles,-CA-90034",
+    "formattedAddress": "3345 Oakhurst Ave, Los Angeles, CA 90034",
+    "addressLine1": "3345 Oakhurst Ave",
+    "addressLine2": null,
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90034",
+    "county": "Los Angeles",
+    "latitude": 34.030132,
+    "longitude": -118.39773,
+    "propertyType": "Single Family",
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "squareFootage": 1661,
+    "lotSize": 4377,
+    "yearBuilt": 1929,
+    "status": "Active",
+    "price": 7000,
+    "listingType": "Standard",
+    "listedDate": "2025-01-12T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2025-01-02T00:00:00.000Z",
+    "lastSeenDate": "2025-04-14T05:25:33.375Z",
+    "daysOnMarket": 93,
+    "history": {
+      "2025-01-12": {
+        "event": "Rental Listing",
+        "price": 7000,
+        "listingType": "Standard",
+        "listedDate": "2025-01-12T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 93
+      }
+    }
+  },
+  {
+    "id": "331-1-2-E-1st-St,-Los-Angeles,-CA-90012",
+    "formattedAddress": "331 1/2 E 1st St, Los Angeles, CA 90012",
+    "addressLine1": "331 1/2 E 1st St",
+    "addressLine2": null,
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90012",
+    "county": "Los Angeles",
+    "latitude": 34.049957,
+    "longitude": -118.239807,
+    "propertyType": "Apartment",
+    "bedrooms": 0,
+    "bathrooms": 1,
+    "squareFootage": 140,
+    "status": "Active",
+    "price": 1390,
+    "listingType": "Standard",
+    "listedDate": "2025-01-13T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2024-07-02T00:00:00.000Z",
+    "lastSeenDate": "2025-04-14T05:25:33.375Z",
+    "daysOnMarket": 92,
+    "history": {
+      "2025-01-13": {
+        "event": "Rental Listing",
+        "price": 1390,
+        "listingType": "Standard",
+        "listedDate": "2025-01-13T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 92
+      }
+    }
+  },
+  {
+    "id": "1101-N-Main-St,-Unit-B738,-Los-Angeles,-CA-90012",
+    "formattedAddress": "1101 N Main St, Unit B738, Los Angeles, CA 90012",
+    "addressLine1": "1101 N Main St",
+    "addressLine2": "Unit B738",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90012",
+    "county": "Los Angeles",
+    "latitude": 34.064299,
+    "longitude": -118.233552,
+    "propertyType": "Single Family",
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "squareFootage": 1054,
+    "lotSize": 115599,
+    "yearBuilt": 2021,
+    "status": "Active",
+    "price": 3575,
+    "listingType": "Standard",
+    "listedDate": "2025-01-12T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2025-04-06T00:00:00.000Z",
+    "lastSeenDate": "2025-04-14T05:25:33.374Z",
+    "daysOnMarket": 93,
+    "mlsName": "TheMLSCLAW",
+    "mlsNumber": "25-480868",
+    "listingAgent": {
+      "name": "Niko Deleon",
+      "phone": "8335253273",
+      "email": "realtorniko@gmail.com",
+      "website": "http://www.nikolaleasing.com"
+    },
+    "listingOffice": {
+      "name": "Keller Williams Realty Los Feliz",
+      "phone": "3233001001",
+      "email": "ycallumpage@aol.com",
+      "website": "www.kwlosfeliz.com"
+    },
+    "history": {
+      "2025-01-12": {
+        "event": "Rental Listing",
+        "price": 3575,
+        "listingType": "Standard",
+        "listedDate": "2025-01-12T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 93
+      }
+    }
+  },
+  {
+    "id": "418-Camino-De-Teodoro,-Walnut,-CA-91789",
+    "formattedAddress": "418 Camino De Teodoro, Walnut, CA 91789",
+    "addressLine1": "418 Camino De Teodoro",
+    "addressLine2": null,
+    "city": "Walnut",
+    "state": "CA",
+    "zipCode": "91789",
+    "county": "Los Angeles",
+    "latitude": 34.009018,
+    "longitude": -117.872309,
+    "propertyType": "Single Family",
+    "bedrooms": 4,
+    "bathrooms": 3,
+    "squareFootage": 2036,
+    "lotSize": 3081,
+    "yearBuilt": 2023,
+    "status": "Active",
+    "price": 4500,
+    "listingType": "Standard",
+    "listedDate": "2025-01-13T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2024-07-20T00:00:00.000Z",
+    "lastSeenDate": "2025-04-14T05:25:33.374Z",
+    "daysOnMarket": 92,
+    "mlsName": "CRMLS",
+    "mlsNumber": "WS25007900",
+    "listingAgent": {
+      "name": "Feifan Jiang",
+      "phone": "6262362382",
+      "email": "feifanjiang@hotmail.com"
+    },
+    "listingOffice": {
+      "name": "IBuilder Group",
+      "phone": "6262888538",
+      "email": "stanonly@hotmail.com"
+    },
+    "history": {
+      "2024-09-09": {
+        "event": "Rental Listing",
+        "price": 4500,
+        "listingType": "Standard",
+        "listedDate": "2024-09-09T00:00:00.000Z",
+        "removedDate": "2024-12-29T00:00:00.000Z",
+        "daysOnMarket": 111
+      },
+      "2025-01-13": {
+        "event": "Rental Listing",
+        "price": 4500,
+        "listingType": "Standard",
+        "listedDate": "2025-01-13T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 92
+      }
+    }
+  },
+  {
+    "id": "5819-Bowcroft-St,-Unit-4,-Los-Angeles,-CA-90016",
+    "formattedAddress": "5819 Bowcroft St, Unit 4, Los Angeles, CA 90016",
+    "addressLine1": "5819 Bowcroft St",
+    "addressLine2": "Unit 4",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90016",
+    "county": "Los Angeles",
+    "latitude": 34.02077,
+    "longitude": -118.373347,
+    "propertyType": "Condo",
+    "bedrooms": 2,
+    "bathrooms": 1.5,
+    "squareFootage": 867,
+    "lotSize": 83610,
+    "yearBuilt": 1949,
+    "status": "Active",
+    "price": 2950,
+    "listingType": "Standard",
+    "listedDate": "2025-01-13T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2019-04-28T09:53:38.995Z",
+    "lastSeenDate": "2025-04-14T05:25:33.373Z",
+    "daysOnMarket": 92,
+    "mlsName": "TheMLSCLAW",
+    "mlsNumber": "25-476049",
+    "listingAgent": {
+      "name": "Scottie Shorter",
+      "phone": "3107140665",
+      "email": "soldit@ca.rr.com",
+      "website": "https://www.coldwellbankerhomes.com/ca/los-angeles/agent/scarlett-scottie-shorter/aid_7129/"
+    },
+    "listingOffice": {
+      "name": "Millennium Brokerage",
+      "phone": "3106300200"
+    },
+    "history": {
+      "2025-01-13": {
+        "event": "Rental Listing",
+        "price": 2950,
+        "listingType": "Standard",
+        "listedDate": "2025-01-13T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 92
+      }
+    }
+  },
+  {
+    "id": "939-Palm-Ave,-Apt-411,-Los-Angeles,-CA-90069",
+    "formattedAddress": "939 Palm Ave, Apt 411, Los Angeles, CA 90069",
+    "addressLine1": "939 Palm Ave",
+    "addressLine2": "Apt 411",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90069",
+    "county": "Los Angeles",
+    "latitude": 34.088362,
+    "longitude": -118.383684,
+    "propertyType": "Apartment",
+    "bedrooms": 3,
+    "bathrooms": 3.5,
+    "squareFootage": 1300,
+    "lotSize": 38764,
+    "yearBuilt": 1990,
+    "status": "Active",
+    "price": 5995,
+    "listingType": "Standard",
+    "listedDate": "2025-01-12T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2025-01-13T00:00:00.000Z",
+    "lastSeenDate": "2025-04-14T05:25:33.372Z",
+    "daysOnMarket": 93,
+    "mlsName": "CRMLS",
+    "mlsNumber": "SR25007683",
+    "listingAgent": {
+      "name": "Carey Lasalle",
+      "phone": "8189174730",
+      "email": "clasalle007@yahoo.com",
+      "website": "http://www.careylasalle.com"
+    },
+    "listingOffice": {
+      "name": "Keller Williams Realty Calabasas",
+      "phone": "8186576500",
+      "email": "meny@kw.com",
+      "website": "http://www.kwcalabasas.com/"
+    },
+    "history": {
+      "2025-01-12": {
+        "event": "Rental Listing",
+        "price": 5995,
+        "listingType": "Standard",
+        "listedDate": "2025-01-12T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 93
+      }
+    }
+  },
+  {
+    "id": "5558-Geer-St,-Los-Angeles,-CA-90016",
+    "formattedAddress": "5558 Geer St, Los Angeles, CA 90016",
+    "addressLine1": "5558 Geer St",
+    "addressLine2": null,
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90016",
+    "county": "Los Angeles",
+    "latitude": 34.030478,
+    "longitude": -118.365535,
+    "propertyType": "Multi-Family",
+    "bedrooms": 4,
+    "bathrooms": 4.5,
+    "squareFootage": 2386,
+    "lotSize": 4800,
+    "yearBuilt": 2022,
+    "status": "Active",
+    "price": 5550,
+    "listingType": "Standard",
+    "listedDate": "2025-01-12T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2023-01-17T02:12:23.622Z",
+    "lastSeenDate": "2025-04-14T05:25:33.371Z",
+    "daysOnMarket": 93,
+    "mlsName": "CRMLS",
+    "mlsNumber": "OC25007497",
+    "listingAgent": {
+      "name": "Mike Kashani",
+      "phone": "9492910424",
+      "email": "mike@bcre.com"
+    },
+    "listingOffice": {
+      "name": "Powerstone Real Estate",
+      "phone": "9495337030"
+    },
+    "history": {
+      "2025-01-12": {
+        "event": "Rental Listing",
+        "price": 5550,
+        "listingType": "Standard",
+        "listedDate": "2025-01-12T00:00:00.000Z",
+        "removedDate": null,
+        "daysOnMarket": 93
+      }
+    }
+  },
+  {
+    "id": "4411-Los-Feliz-Blvd,-Apt-1205,-Los-Angeles,-CA-90027",
+    "formattedAddress": "4411 Los Feliz Blvd, Apt 1205, Los Angeles, CA 90027",
+    "addressLine1": "4411 Los Feliz Blvd",
+    "addressLine2": "Apt 1205",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zipCode": "90027",
+    "county": "Los Angeles",
+    "latitude": 34.112483,
+    "longitude": -118.286389,
+    "propertyType": "Condo",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "squareFootage": 812,
+    "lotSize": 93238,
+    "yearBuilt": 1966,
+    "status": "Active",
+    "price": 5000,
+    "listingType": "Standard",
+    "listedDate": "2025-01-12T00:00:00.000Z",
+    "removedDate": null,
+    "createdDate": "2025-01-13T00:00:00.000Z",
+    "lastSeenDate": "2025-04-14T05:25:33.370Z",
+    "daysOnMarket": 93,
+    "mlsName": "TheMLSCLAW",
+    "mlsNumber": "25-480761",
+    "listingAgent": {
+      "name": "Claudia Hipolito",
+      "phone": "3236972360",
+      "email": "claudia.hipolito@camov"
+    }
+  }
+
+
   ]

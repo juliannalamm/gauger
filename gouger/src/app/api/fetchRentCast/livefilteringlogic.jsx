@@ -20,7 +20,7 @@ export async function GET(req) {
 
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("query");
-    const limit = searchParams.get("limit") || "50";
+    const limit = searchParams.get("limit") || "500";
 
     if (!query) {
       return NextResponse.json(

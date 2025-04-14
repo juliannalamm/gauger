@@ -36,3 +36,9 @@ append("key", "value")
 Adds another value (doesnâ€™t replace)
 delete("key")
 Removes the parameter
+
+
+
+If a property was rented within the past year, the base rent is the most recent price paid by the tenant.
+If it was not rented but offered for rent within the last year, the base is the most recent rental offer price.
+If it has not been rented or offered within the last year, the base rent defaults to 160% of the HUD fair market rent.
