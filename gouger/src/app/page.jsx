@@ -1,7 +1,6 @@
 "use client"; // Ensures this runs only on the client side
 
 import { useState } from "react";
-import SearchBar from "../components/SearchBar";
 import { useLoadScript } from "@react-google-maps/api";
 import MapComponent from "../components/Map";
 
@@ -14,8 +13,9 @@ export default function Home() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API,
     libraries,
+    version: "beta", // needed for <gmpx-place-autocomplete>
   });
-
+  
   const handleSearch = async (query) => {
     console.log("Searching for:", query);
     setLoading(true);
@@ -49,10 +49,9 @@ export default function Home() {
       </header>
   
       <div className="w-[800px] max-w-5xl mx-auto h-[400px] mb-10 mt-20">
-        <MapComponent rentals={rentals} />
+      <MapComponent rentals={rentals} isLoaded={isLoaded} onSearch={handleSearch} />
       </div>
   
-      <SearchBar onSearch={handleSearch} isLoaded={isLoaded} />
   
       {loading && <p className="mt-2">Loading...</p>}
     </div>

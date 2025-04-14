@@ -64,8 +64,15 @@ export async function GET(req) {
         );
       }
     } else {
-      console.warn("Query format did not match expected cases, sending raw to RentCast.");
-      params = { city: query, ...params };
+      console.warn("Query format did not match expected cases");
+    
+      if (/^\d{5}$/.test(query)) {
+        // If the query is a 5-digit ZIP code
+        params = { zipCode: query, ...params };
+      } else {
+        // Otherwise send as city name
+        params = { city: query, ...params };
+      }
     }
 
     let requestUrl = `https://api.rentcast.io/v1/listings/rental/long-term?${new URLSearchParams(params).toString()}`;
