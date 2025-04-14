@@ -57,7 +57,6 @@ const MapComponent = ({ rentals, isLoaded, onSearch }) => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Map */}
       <div className="w-full max-w-5xl">
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -77,7 +76,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch }) => {
                 key={index}
                 position={{ lat, lng }}
                 title={rental.formattedAddress}
-                icon={getMarkerIcon(Number(rental.price))}
+                icon={getMarkerIcon(rental)}
                 onClick={() => setSelectedRental(rental)}
               />
             );
@@ -92,15 +91,26 @@ const MapComponent = ({ rentals, isLoaded, onSearch }) => {
               onCloseClick={() => setSelectedRental(null)}
             >
               <div className="text-black p-2 rounded-md max-w-xs">
-                <h2 className="m-0 font-bold">{selectedRental.formattedAddress}</h2>
-                <p className="mt-1">${selectedRental.price}/mo</p>
+                <h2 className="font-bold">{selectedRental.formattedAddress}</h2>
+                <p>💰 <strong>Price:</strong> ${selectedRental.price}</p>
+                <p>📊 <strong>Base Rent:</strong> ${selectedRental.baseRent?.toFixed(0) || "N/A"}</p>
+                <p>🏠 <strong>FMR Used:</strong> ${selectedRental.fmrValue?.toFixed(0) || "N/A"}</p>
+                <p>🚨 <strong>Gouging Threshold:</strong> ${selectedRental.fmrGougingCutoff?.toFixed(0) || "N/A"}</p>
+                <p>📜 <strong>Has History:</strong> {selectedRental.hasHistory ? "Yes" : "No"}</p>
+                {selectedRental.hasHistory && selectedRental.percentIncrease !== null && (
+                  <p>📈 <strong>Increase:</strong> {selectedRental.percentIncrease.toFixed(1)}%</p>
+                )}
+                <p className="mt-1 font-semibold">
+                  {selectedRental.isGouging
+                    ? "⚠️ Potential Rent Gouging"
+                    : "✅ Within Allowed Range"}
+                </p>
               </div>
             </InfoWindow>
           )}
         </GoogleMap>
       </div>
 
-      {/* Search input below map */}
       <div className="mt-4 w-[32rem] relative">
         <input
           ref={inputRef}
@@ -127,7 +137,6 @@ const MapComponent = ({ rentals, isLoaded, onSearch }) => {
         </div>
       </div>
 
-      {/* No rentals message */}
       {hasSearched && rentals.length === 0 && (
         <p className="mt-4 text-gray-500 text-sm italic">
           No rentals found for this location.

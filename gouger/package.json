@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-google-maps/api": "^2.20.6",
     "axios": "^1.7.9",
+    "csvtojson": "^2.0.10",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

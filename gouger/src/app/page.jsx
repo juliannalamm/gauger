@@ -1,6 +1,6 @@
 "use client"; // Ensures this runs only on the client side
 
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import MapComponent from "../components/Map";
 
@@ -39,6 +39,11 @@ export default function Home() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    console.log("📍 Listings received:", rentals.length);
+    const gouging = rentals.filter((r) => r.isGouging);
+    console.log("🚨 Gouging listings:", gouging);
+  }, [rentals]);
 
   if (!isLoaded) return <p>Loading Google Maps...</p>;
 
