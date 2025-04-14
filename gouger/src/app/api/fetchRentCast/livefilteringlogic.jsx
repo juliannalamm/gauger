@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import localRentals from "../../../../data/rentals.json"; // Adjust the path if needed
+import localRentals from "../../../../data/rentals.json";
 
 const RENTCAST_API_KEY = process.env.RENTCAST_API_KEY;
 
@@ -9,8 +9,7 @@ if (!RENTCAST_API_KEY) {
   throw new Error("Missing RentCast API Key. Check your .env.local file.");
 }
 
-export async function GET(req: Request) {
-  // In development mode, return local JSON data to avoid extra API calls
+export async function GET(req) {
   if (process.env.NODE_ENV === "development") {
     console.log("Development mode: returning local rentals data");
     return NextResponse.json(localRentals);
@@ -19,7 +18,6 @@ export async function GET(req: Request) {
   try {
     console.log("Using RentCast API Key:", RENTCAST_API_KEY);
 
-    // Extract search parameters
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("query");
     const limit = searchParams.get("limit") || "50";
@@ -30,14 +28,11 @@ export async function GET(req: Request) {
         { status: 400 }
       );
     }
-    
 
-    // Parse query into address components to address Google autofill formatting issues with RentCast
-    let params: Record<string, string> = { status: "Active", limit: limit.toString() };
+    let params = { status: "Active", limit: limit.toString() };
     const parts = query.replace(", USA", "").trim().split(",").map((part) => part.trim());
 
     if (parts.length === 2) {
-      // "City, State ZIP"
       const stateZipParts = parts[1].split(" ");
       if (stateZipParts.length === 2) {
         params = {
@@ -53,7 +48,6 @@ export async function GET(req: Request) {
         );
       }
     } else if (parts.length === 3) {
-      // "Street, City, State ZIP"
       const stateZipParts = parts[2].split(" ");
       if (stateZipParts.length === 2) {
         params = {
@@ -71,28 +65,24 @@ export async function GET(req: Request) {
       }
     } else {
       console.warn("Query format did not match expected cases, sending raw to RentCast.");
-      params = { city: query, ...params }; // Allow RentCast to handle unknown formats
+      params = { city: query, ...params };
     }
 
-    // Construct API request URL
     let requestUrl = `https://api.rentcast.io/v1/listings/rental/long-term?${new URLSearchParams(params).toString()}`;
-    requestUrl = requestUrl.replace(/\+/g, "%20"); // Fix space encoding issue
+    requestUrl = requestUrl.replace(/\+/g, "%20");
 
     console.log("RentCast Full Request URL:", requestUrl);
 
-    // Make API request
-    console.log("Sending Fetch Request...");
     const response = await fetch(requestUrl, {
       method: "GET",
       headers: {
         "Accept": "application/json",
-        "X-Api-Key": RENTCAST_API_KEY as string,
+        "X-Api-Key": RENTCAST_API_KEY,
       },
     });
 
     const data = await response.json();
 
-    // Log the actual response from RentCast
     console.log("RentCast API Raw Response:", data);
 
     if (!response.ok) {
@@ -100,7 +90,7 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error) {
     console.error("RentCast API Error:", error.message);
     return NextResponse.json({ error: "Failed to fetch rentals" }, { status: 500 });
   }

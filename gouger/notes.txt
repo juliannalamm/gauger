@@ -1,2 +1,38 @@
 API end point is located in page.tsx, when search typed in it fetches rentals from route.ts and stores the rentals in 
 rentals state. Frome there, the rentals are passed from page.tsx to map.tsx and rendered on the map. 
+
+State in react: 
+State is data that a component keeps track of and can change over time. It determines how the component behaves and renders.
+const [count, setCount] = useState(0);
+	•	count is your state value
+	•	setCount updates it and triggers a re-render
+React provides the useEffect hook to run side effects in functional components.
+useEffect(() => {
+  console.log("Component mounted");
+
+  return () => {
+    console.log("Cleanup if unmounted");
+  };
+}, []);
+
+	•	Reaches outside of the component’s render logic (the browser console)
+	•	Happens after render
+	•	Doesn’t return JSX
+
+const url = new URL("https://example.com/search?query=apples&limit=10");
+
+console.log(url.searchParams.get("query")); // "apples"
+console.log(url.searchParams.get("limit")); // "10"
+
+get("key")
+Gets the value of a parameter
+has("key")
+Checks if the key exists
+getAll("key")
+Gets all values for a repeated key
+set("key", "value")
+Sets a new value
+append("key", "value")
+Adds another value (doesnâ€™t replace)
+delete("key")
+Removes the parameter

@@ -1,41 +1,25 @@
 "use client";
 
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { GoogleMap, Marker, useLoadScript, InfoWindow } from "@react-google-maps/api";
-import { getMarkerIcon } from "../lib/markerIcon"; // adjust the path if needed
-
+import { getMarkerIcon } from "../lib/markerIcon";
 
 const containerStyle = {
   width: "100%",
   height: "400px",
 };
 
-interface Rental {
-  formattedAddress: string;
-  price: number;
-  latitude: number | string;
-  longitude: number | string;
-  //TODO: Add more fields like bed/bath, squareFoot etc.
-}
-
-interface MapProps {
-  rentals: Rental[];
-  center?: { lat: number; lng: number };
-}
-
-const MapComponent: React.FC<MapProps> = ({ rentals, center }) => {
-  // If rentals available, use first rental's coordinates as center. this allows us to see the markers
+const MapComponent = ({ rentals, center }) => {
   const defaultCenter =
     center ||
     (rentals.length > 0
       ? { lat: Number(rentals[0].latitude), lng: Number(rentals[0].longitude) }
       : { lat: 34.052235, lng: -118.243683 });
-  
-  // State for tracking which rental (if any) is selected (clicked)
-  const [selectedRental, setSelectedRental] = useState<Rental | null>(null);
+
+  const [selectedRental, setSelectedRental] = useState(null);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API as string,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API,
     libraries: ["places"],
   });
 
@@ -65,7 +49,6 @@ const MapComponent: React.FC<MapProps> = ({ rentals, center }) => {
         );
       })}
 
-      {/* Only render InfoWindow if a rental is selected */}
       {selectedRental && (
         <InfoWindow
           position={{
@@ -76,16 +59,10 @@ const MapComponent: React.FC<MapProps> = ({ rentals, center }) => {
         >
           <div className="text-black p-2 rounded-md max-w-xs">
             <h2 className="m-0 font-bold">{selectedRental.formattedAddress}</h2>
-            <p className="mt-1">
-              ${selectedRental.price}/mo
-              </p>
-              </div>
+            <p className="mt-1">${selectedRental.price}/mo</p>
+          </div>
         </InfoWindow>
       )}
-
-
-      {/* TESTING */}
-      {/* <Marker position={{ lat: 34.052235, lng: -118.243683 }} title="Test Marker" /> */}
     </GoogleMap>
   );
 };
