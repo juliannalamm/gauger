@@ -1,7 +1,7 @@
 export const getMarkerIcon = (rental) => {
   const { isGouging, baseRent } = rental;
 
-  let fillColor = "#00ff00"; // default green if no gouging
+  let fillColor = "#388a3d"; // default green if no gouging
 
   if (isGouging) {
     fillColor = "#ff0000"; // red if rent is considered gouging
@@ -26,6 +26,6 @@ export const getMarkerIcon = (rental) => {
 
   return {
     url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgIcon)}`,
-    scaledSize: new window.google.maps.Size(32, 32),
+    scaledSize: new window.google.maps.Size(25, 25),
   };
 };

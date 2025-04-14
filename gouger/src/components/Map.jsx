@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { getMarkerIcon } from "../lib/markerIcon";
+import customMapStyle from "../lib/mapStyle"; // adjust the path if needed
+
 
 const containerStyle = {
   width: "100%",
@@ -11,7 +13,13 @@ const containerStyle = {
 
 const LOS_ANGELES = { lat: 34.052235, lng: -118.243683 };
 
-const MapComponent = ({ rentals, isLoaded, onSearch }) => {
+const mapOptions = {
+  styles: customMapStyle,
+  disableDefaultUI: true, // optional: removes all controls
+  zoomControl: true,      // re-enable zoom if you want it
+};
+
+const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
   const mapRef = useRef(null);
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
@@ -62,6 +70,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch }) => {
           mapContainerStyle={containerStyle}
           center={mapCenter}
           zoom={12}
+          options={mapOptions}
           onLoad={(map) => (mapRef.current = map)}
         >
           {rentals.map((rental, index) => {
@@ -92,18 +101,18 @@ const MapComponent = ({ rentals, isLoaded, onSearch }) => {
             >
               <div className="text-black p-2 rounded-md max-w-xs">
                 <h2 className="font-bold">{selectedRental.formattedAddress}</h2>
-                <p>💰 <strong>Price:</strong> ${selectedRental.price}</p>
-                <p>📊 <strong>Base Rent:</strong> ${selectedRental.baseRent?.toFixed(0) || "N/A"}</p>
-                <p>🏠 <strong>FMR Used:</strong> ${selectedRental.fmrValue?.toFixed(0) || "N/A"}</p>
-                <p>🚨 <strong>Gouging Threshold:</strong> ${selectedRental.fmrGougingCutoff?.toFixed(0) || "N/A"}</p>
-                <p>📜 <strong>Has History:</strong> {selectedRental.hasHistory ? "Yes" : "No"}</p>
+                <p> <strong>Price:</strong> ${selectedRental.price}</p>
+                <p><strong>Base Rent:</strong> ${selectedRental.baseRent?.toFixed(0) || "N/A"}</p>
+                <p> <strong>FMR Used:</strong> ${selectedRental.fmrValue?.toFixed(0) || "N/A"}</p>
+                <p> <strong>Gouging Threshold:</strong> ${selectedRental.fmrGougingCutoff?.toFixed(0) || "N/A"}</p>
+                <p> <strong>Has History:</strong> {selectedRental.hasHistory ? "Yes" : "No"}</p>
                 {selectedRental.hasHistory && selectedRental.percentIncrease !== null && (
-                  <p>📈 <strong>Increase:</strong> {selectedRental.percentIncrease.toFixed(1)}%</p>
+                  <p> <strong>Increase:</strong> {selectedRental.percentIncrease.toFixed(1)}%</p>
                 )}
                 <p className="mt-1 font-semibold">
                   {selectedRental.isGouging
-                    ? "⚠️ Potential Rent Gouging"
-                    : "✅ Within Allowed Range"}
+                    ? "Potential Rent Gouging"
+                    : " Within Allowed Range"}
                 </p>
               </div>
             </InfoWindow>
@@ -137,11 +146,17 @@ const MapComponent = ({ rentals, isLoaded, onSearch }) => {
         </div>
       </div>
 
-      {hasSearched && rentals.length === 0 && (
+      {loading && (
+        <p className="mt-4 text-gray-500 text-sm italic">Loading rentals...</p>
+      )}
+
+      {!loading && hasSearched && rentals.length === 0 && (
         <p className="mt-4 text-gray-500 text-sm italic">
           No rentals found for this location.
         </p>
       )}
+
+
     </div>
   );
 };

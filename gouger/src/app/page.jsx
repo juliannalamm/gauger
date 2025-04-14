@@ -1,6 +1,6 @@
 "use client"; // Ensures this runs only on the client side
 
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import MapComponent from "../components/Map";
 
@@ -15,7 +15,7 @@ export default function Home() {
     libraries,
     version: "beta", // needed for <gmpx-place-autocomplete>
   });
-  
+
   const handleSearch = async (query) => {
     console.log("Searching for:", query);
     setLoading(true);
@@ -52,14 +52,20 @@ export default function Home() {
       <header className="absolute top-4 text-6xl font-bold text-red-500 z-10">
         Gouger
       </header>
-  
+
       <div className="w-[800px] max-w-5xl mx-auto h-[400px] mb-10 mt-20">
-      <MapComponent rentals={rentals} isLoaded={isLoaded} onSearch={handleSearch} />
+        <MapComponent
+          rentals={rentals}
+          isLoaded={isLoaded}
+          onSearch={handleSearch}
+          loading={loading}
+        />
+
       </div>
-  
-  
+
+
       {loading && <p className="mt-2">Loading...</p>}
     </div>
   );
-  
+
 }
