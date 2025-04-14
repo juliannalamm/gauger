@@ -48,12 +48,12 @@ export default function Home() {
   if (!isLoaded) return <p>Loading Google Maps...</p>;
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center bg-white-100">
+    <div className="flex flex-col h-screen items-center justify-center bg-black-100">
       <header className="absolute top-4 text-6xl font-bold text-red-500 z-10">
         Gouger
       </header>
 
-      <div className="w-[800px] max-w-5xl mx-auto h-[400px] mb-10 mt-20">
+      <div className="w-[800px] rounded-lg overflow-hidden max-w-5xl mx-auto h-[500px] mb-10 mt-20">
         <MapComponent
           rentals={rentals}
           isLoaded={isLoaded}
