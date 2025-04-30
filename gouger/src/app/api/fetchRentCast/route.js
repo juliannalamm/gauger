@@ -1,73 +1,13 @@
 import { NextResponse } from "next/server";
-import localRentals from "../../../../data/rentals.json";
-import fmrData from "../../../../data/fmr.json";
 
+// ENV vars
+const useLocal = process.env.NEXT_PUBLIC_USE_LOCAL_RENTALS === "true";
+const rentalsUrl = process.env.RENTALS_JSON_URL;
+const fmrUrl = process.env.FMR_JSON_URL;
 const RENTCAST_API_KEY = process.env.RENTCAST_API_KEY;
 
-console.log("RENTCAST_API_KEY from process.env:", RENTCAST_API_KEY || "Not Found");
-
 if (!RENTCAST_API_KEY) {
-  throw new Error("Missing RentCast API Key. Check your .env.local file.");
-}
-
-// -------------------
-// Base rent + gouging logic
-// -------------------
-function getBaseRent(listing) {
-  const zip = listing.zipCode?.toString();
-  const bedrooms = listing.bedrooms || 1;
-  const price = listing.price;
-  const now = new Date();
-  const lastSeen = listing.lastSeenDate ? new Date(listing.lastSeenDate) : null;
-
-  const fmr = fmrData.find((entry) => entry.zip_code === zip);
-  const fmrKey = `SAFMR_${bedrooms}BR`;
-  const fmrRaw = fmr?.[fmrKey]?.replace(/[$,]/g, "");
-  const fmrValue = fmrRaw ? Number(fmrRaw) : null;
-  const fmrGougingCutoff = fmrValue ? fmrValue * 1.6 : null;
-
-  // Determine previous price
-  let previousPrice = null;
-  let percentIncrease = null;
-  let isPercentGouging = false;
-  let hasHistory = false;
-
-  if (listing.history && typeof listing.history === "object") {
-    const sorted = Object.entries(listing.history)
-      .map(([date, data]) => ({ date, ...data }))
-      .filter((d) => typeof d.price === "number")
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    if (sorted.length > 1) {
-      hasHistory = true;
-      previousPrice = sorted[1].price;
-
-      const date = new Date(sorted[1].date);
-      const diffMonths =
-        (now.getFullYear() - date.getFullYear()) * 12 +
-        (now.getMonth() - date.getMonth());
-
-      if (diffMonths <= 12) {
-        percentIncrease = ((price - previousPrice) / previousPrice) * 100;
-        isPercentGouging = percentIncrease > 10;
-      }
-    }
-  }
-
-  const isFMRGouging =
-    !hasHistory && fmrGougingCutoff && price > fmrGougingCutoff;
-  const isGouging = isFMRGouging || isPercentGouging;
-
-  return {
-    fmrValue,
-    fmrGougingCutoff,
-    baseRent: hasHistory ? previousPrice : fmrValue,
-    rentCategory: hasHistory ? "history" : "fmr-default",
-    previousPrice,
-    hasHistory,
-    percentIncrease,
-    isGouging,
-  };
+  console.warn("RENTCAST_API_KEY is not set. Live RentCast API mode may fail.");
 }
 
 export async function GET(req) {
@@ -82,162 +22,159 @@ export async function GET(req) {
     );
   }
 
-  // -------------------------------
-  // DEVELOPMENT MODE
-  // -------------------------------
-  if (process.env.NODE_ENV === "development") {
-    console.log("Development mode: filtering local rentals data");
+  if (useLocal) {
+    console.log("Using local S3 rentals + FMR JSON");
 
+    const [rentalsRes, fmrRes] = await Promise.all([
+      fetch(rentalsUrl),
+      fetch(fmrUrl),
+    ]);
+
+    if (!rentalsRes.ok || !fmrRes.ok) {
+      return NextResponse.json(
+        { error: "Failed to load S3-hosted rentals or FMR data" },
+        { status: 500 }
+      );
+    }
+
+    const localRentals = await rentalsRes.json();
+    const fmrData = await fmrRes.json();
+
+    function getBaseRent(listing) {
+      const zip = listing.zipCode?.toString();
+      const bedrooms = listing.bedrooms || 1;
+      const price = listing.price;
+      const now = new Date();
+
+      const fmr = fmrData.find((entry) => entry.zip_code === zip);
+      const fmrKey = `SAFMR_${bedrooms}BR`;
+      const fmrRaw = fmr?.[fmrKey]?.replace(/[$,]/g, "");
+      const fmrValue = fmrRaw ? Number(fmrRaw) : null;
+      const fmrGougingCutoff = fmrValue ? fmrValue * 1.6 : null;
+
+      let previousPrice = null;
+      let percentIncrease = null;
+      let isPercentGouging = false;
+      let hasHistory = false;
+      let percentOverCutoff = null;
+
+      if (listing.history && typeof listing.history === "object") {
+        const sorted = Object.entries(listing.history)
+          .map(([date, data]) => ({ date, ...data }))
+          .filter((d) => typeof d.price === "number")
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if (sorted.length > 1) {
+          hasHistory = true;
+          previousPrice = sorted[1].price;
+
+          const date = new Date(sorted[1].date);
+          const diffMonths =
+            (now.getFullYear() - date.getFullYear()) * 12 +
+            (now.getMonth() - date.getMonth());
+
+          if (diffMonths <= 12) {
+            percentIncrease = ((price - previousPrice) / previousPrice) * 100;
+            isPercentGouging = percentIncrease > 10;
+          }
+        }
+      }
+
+      if (hasHistory && previousPrice) {
+        const cutoff = previousPrice * 1.1;
+        percentOverCutoff = ((price - cutoff) / cutoff) * 100;
+      } else if (!hasHistory && fmrGougingCutoff) {
+        percentOverCutoff = ((price - fmrGougingCutoff) / fmrGougingCutoff) * 100;
+      }
+
+      const isFMRGouging =
+        !hasHistory && fmrGougingCutoff && price > fmrGougingCutoff;
+      const isGouging = isFMRGouging || isPercentGouging;
+
+      return {
+        fmrValue,
+        fmrGougingCutoff,
+        baseRent: hasHistory ? previousPrice : fmrValue,
+        rentCategory: hasHistory ? "history" : "fmr-default",
+        previousPrice,
+        hasHistory,
+        percentIncrease,
+        percentOverCutoff,
+        isGouging,
+      };
+    }
+
+    const parts = query.replace(", USA", "").trim().split(",").map(p => p.trim());
     let params = {};
-    const parts = query
-      .replace(", USA", "")
-      .trim()
-      .split(",")
-      .map((part) => part.trim());
 
     if (parts.length === 2) {
-      const stateZipParts = parts[1].split(" ");
-      if (stateZipParts.length === 2) {
-        params = {
-          city: parts[0],
-          state: stateZipParts[0],
-          zipCode: stateZipParts[1],
-        };
+      const [city, stateZip] = parts;
+      const [state, zipCode] = stateZip.split(" ");
+      if (state && zipCode) {
+        params = { city, state, zipCode };
       }
     } else if (parts.length === 3) {
-      const stateZipParts = parts[2].split(" ");
-      if (stateZipParts.length === 2) {
-        params = {
-          address: parts[0],
-          city: parts[1],
-          state: stateZipParts[0],
-          zipCode: stateZipParts[1],
-        };
+      const [address, city, stateZip] = parts;
+      const [state, zipCode] = stateZip.split(" ");
+      if (state && zipCode) {
+        params = { address, city, state, zipCode };
       }
     } else {
-      console.warn(
-        "Query format did not match expected cases, using raw query for filtering"
-      );
       params = { city: query };
     }
 
     const filteredRentals = localRentals.filter((rental) => {
       let match = true;
-
       if (params.zipCode) {
-        match =
-          match &&
-          rental.zipCode &&
-          rental.zipCode.toString().includes(params.zipCode);
-      } else {
-        if (params.city) {
-          match =
-            match &&
-            rental.city &&
-            rental.city.toLowerCase().includes(params.city.toLowerCase());
-        }
+        match &&= rental.zipCode?.toString().includes(params.zipCode);
+      } else if (params.city) {
+        match &&= rental.city?.toLowerCase().includes(params.city.toLowerCase());
       }
-
       if (params.state) {
-        match =
-          match &&
-          rental.state &&
-          rental.state.toLowerCase().includes(params.state.toLowerCase());
+        match &&= rental.state?.toLowerCase().includes(params.state.toLowerCase());
       }
-
       if (params.address) {
-        match =
-          match &&
-          rental.address &&
-          rental.address.toLowerCase().includes(params.address.toLowerCase());
+        match &&= rental.address?.toLowerCase().includes(params.address.toLowerCase());
       }
-
       return match;
     });
 
     const rentalsWithBase = filteredRentals
       .slice(0, Number(limit))
-      .map((rental) => {
-        const {
-          fmrValue, // <- ADDED
-          fmrGougingCutoff, // <- ADDED
-          baseRent,
-          rentCategory,
-          previousPrice,
-          percentIncrease,
-          isGouging,
-        } = getBaseRent(rental);
-
-        return {
-          ...rental,
-          fmrValue, // <- ADDED
-          fmrGougingCutoff, // <- ADDED
-          baseRent,
-          rentCategory,
-          previousPrice,
-          percentIncrease,
-          isGouging,
-        };
-      });
+      .map((rental) => ({
+        ...rental,
+        ...getBaseRent(rental),
+      }));
 
     return NextResponse.json(rentalsWithBase);
   }
 
   // -------------------------------
-  // PRODUCTION MODE
+  // PRODUCTION MODE - RentCast API
   // -------------------------------
   try {
-    console.log("Using RentCast API Key:", RENTCAST_API_KEY);
+    console.log("Using RentCast API");
 
     let params = { status: "Active", limit: limit.toString() };
-    const parts = query
-      .replace(", USA", "")
-      .trim()
-      .split(",")
-      .map((part) => part.trim());
+    const parts = query.replace(", USA", "").trim().split(",").map(p => p.trim());
 
     if (parts.length === 2) {
-      const stateZipParts = parts[1].split(" ");
-      if (stateZipParts.length === 2) {
-        params = {
-          city: parts[0],
-          state: stateZipParts[0],
-          zipCode: stateZipParts[1],
-          ...params,
-        };
-      } else {
-        return NextResponse.json(
-          { error: "Invalid address format. Expected 'City, State ZIP'." },
-          { status: 400 }
-        );
+      const [city, stateZip] = parts;
+      const [state, zipCode] = stateZip.split(" ");
+      if (state && zipCode) {
+        params = { city, state, zipCode, ...params };
       }
     } else if (parts.length === 3) {
-      const stateZipParts = parts[2].split(" ");
-      if (stateZipParts.length === 2) {
-        params = {
-          address: parts[0],
-          city: parts[1],
-          state: stateZipParts[0],
-          zipCode: stateZipParts[1],
-          ...params,
-        };
-      } else {
-        return NextResponse.json(
-          {
-            error: "Invalid address format. Expected 'Street, City, State ZIP'.",
-          },
-          { status: 400 }
-        );
+      const [address, city, stateZip] = parts;
+      const [state, zipCode] = stateZip.split(" ");
+      if (state && zipCode) {
+        params = { address, city, state, zipCode, ...params };
       }
     } else {
-      console.warn("Query format did not match expected cases, sending raw to RentCast.");
       params = { city: query, ...params };
     }
 
-    const requestUrl = `https://api.rentcast.io/v1/listings/rental/long-term?${new URLSearchParams(
-      params
-    ).toString()}`.replace(/\+/g, "%20");
-    console.log("RentCast Full Request URL:", requestUrl);
+    const requestUrl = `https://api.rentcast.io/v1/listings/rental/long-term?${new URLSearchParams(params).toString()}`.replace(/\+/g, "%20");
 
     const response = await fetch(requestUrl, {
       method: "GET",
@@ -248,33 +185,14 @@ export async function GET(req) {
     });
 
     const data = await response.json();
-
     if (!response.ok) {
       throw new Error(`API Error: ${JSON.stringify(data)}`);
     }
 
-    const rentalsWithBase = data.map((rental) => {
-      const {
-        fmrValue, // <- ADDED
-        fmrGougingCutoff, // <- ADDED
-        baseRent,
-        rentCategory,
-        previousPrice,
-        percentIncrease,
-        isGouging,
-      } = getBaseRent(rental);
-
-      return {
-        ...rental,
-        fmrValue, // <- ADDED
-        fmrGougingCutoff, // <- ADDED
-        baseRent,
-        rentCategory,
-        previousPrice,
-        percentIncrease,
-        isGouging,
-      };
-    });
+    const rentalsWithBase = data.map((rental) => ({
+      ...rental,
+      ...getBaseRent(rental), // re-use the same logic
+    }));
 
     return NextResponse.json(rentalsWithBase);
   } catch (error) {

@@ -102,68 +102,81 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
           })}
 
           {selectedRental && (
-           <InfoWindow
-           position={{
-             lat: Number(selectedRental.latitude),
-             lng: Number(selectedRental.longitude),
-           }}
-           onCloseClick={() => setSelectedRental(null)}
-         >
-           <div className="bg-white p-4 rounded-xl shadow-lg max-w-xs text-sm font-sans leading-snug">
-             <h2 className="text-base font-semibold text-gray-800 mb-3">
-               {selectedRental.formattedAddress}
-             </h2>
-         
-             <div className="space-y-2 text-gray-700">
-               <p className="flex items-center gap-2">
-                 <DollarSign className="w-4 h-4 text-gray-500" />
-                 <span className="font-medium">Price:</span> ${selectedRental.price}
-               </p>
-               <p className="flex items-center gap-2">
-                 <BarChart2 className="w-4 h-4 text-gray-500" />
-                 <span className="font-medium">Base Rent:</span> ${selectedRental.baseRent?.toFixed(0) || "N/A"}
-               </p>
-               <p className="flex items-center gap-2">
-                 <Home className="w-4 h-4 text-gray-500" />
-                 <span className="font-medium">FMR Used:</span> ${selectedRental.fmrValue?.toFixed(0) || "N/A"}
-               </p>
-               <p className="flex items-center gap-2">
-                 <AlertTriangle className="w-4 h-4 text-gray-500" />
-                 <span className="font-medium">Gouging Threshold:</span> ${selectedRental.fmrGougingCutoff?.toFixed(0) || "N/A"}
-               </p>
-               <p className="flex items-center gap-2">
-                 <ScrollText className="w-4 h-4 text-gray-500" />
-                 <span className="font-medium">Has History:</span> {selectedRental.hasHistory ? "Yes" : "No"}
-               </p>
-         
-               {selectedRental.hasHistory && selectedRental.percentIncrease !== null && (
-                 <p className="flex items-center gap-2">
-                   <TrendingUp className="w-4 h-4 text-gray-500" />
-                   <span className="font-medium">Increase:</span> {selectedRental.percentIncrease.toFixed(1)}%
-                 </p>
-               )}
-             </div>
-         
-             <p
-               className={`mt-3 font-semibold flex items-center gap-2 ${
-                 selectedRental.isGouging ? "text-red-600" : "text-green-600"
-               }`}
-             >
-               {selectedRental.isGouging ? (
-                 <>
-                   <ShieldX className="w-4 h-4" />
-                   Potential Rent Gouging
-                 </>
-               ) : (
-                 <>
-                   <ShieldCheck className="w-4 h-4" />
-                   Within Allowed Range
-                 </>
-               )}
-             </p>
-           </div>
-         </InfoWindow>
-         
+            <InfoWindow
+              position={{
+                lat: Number(selectedRental.latitude),
+                lng: Number(selectedRental.longitude),
+              }}
+              onCloseClick={() => setSelectedRental(null)}
+            >
+              <div className="-mt-2"> {/* <- negative top margin to pull content up */}
+                <div className="bg-white px-4 py-2 rounded-xl shadow-lg max-w-xs text-sm font-sans leading-snug">
+                  {selectedRental.percentOverCutoff !== null && (
+                    <h3
+                      className={`text-sm font-semibold mb-1 uppercase tracking-wide ${selectedRental.percentOverCutoff > 0
+                          ? "text-red-600"
+                          : "text-green-600"
+                        }`}
+                    >
+                      {selectedRental.percentOverCutoff > 0 ? "+" : ""}
+                      {selectedRental.percentOverCutoff.toFixed(1)}% over gouging threshold
+                    </h3>
+                  )}
+                  <h2 className="text-base font-semibold text-gray-800 mb-3">
+                    {selectedRental.formattedAddress}
+                  </h2>
+
+                  <div className="space-y-2 text-gray-700">
+                    <p className="flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-gray-500" />
+                      <span className="font-medium">Price:</span> ${selectedRental.price}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <BarChart2 className="w-4 h-4 text-gray-500" />
+                      <span className="font-medium">Base Rent:</span> ${selectedRental.baseRent?.toFixed(0) || "N/A"}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Home className="w-4 h-4 text-gray-500" />
+                      <span className="font-medium">FMR Used:</span> ${selectedRental.fmrValue?.toFixed(0) || "N/A"}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-gray-500" />
+                      <span className="font-medium">Gouging Threshold:</span> ${selectedRental.fmrGougingCutoff?.toFixed(0) || "N/A"}
+                    </p>
+                    {/* <p className="flex items-center gap-2">
+                    <ScrollText className="w-4 h-4 text-gray-500" />
+                    <span className="font-medium">Has History:</span> {selectedRental.hasHistory ? "Yes" : "No"}
+                  </p> */}
+
+                    {selectedRental.hasHistory && selectedRental.percentIncrease !== null && (
+                      <p className="flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-gray-500" />
+                        <span className="font-medium">Increase:</span> {selectedRental.percentIncrease.toFixed(1)}%
+                      </p>
+                    )}
+                  </div>
+
+
+                  <p
+                    className={`mt-3 font-semibold flex items-center gap-2 ${selectedRental.isGouging ? "text-red-600" : "text-green-600"
+                      }`}
+                  >
+                    {selectedRental.isGouging ? (
+                      <>
+                        <ShieldX className="w-4 h-4" />
+                        Potential Rent Gouging
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="w-4 h-4" />
+                        Within Allowed Range
+                      </>
+                    )}
+                  </p>
+                </div>
+                </div>
+            </InfoWindow>
+
           )}
         </GoogleMap>
       </div>
@@ -173,7 +186,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
           ref={inputRef}
           type="text"
           id="autocomplete-input"
-          placeholder="Enter a ZIP code"
+          placeholder="Enter a Los Angeles ZIP code"
           className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg shadow bg-white focus:ring-blue-500 focus:border-blue-500"
         />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">

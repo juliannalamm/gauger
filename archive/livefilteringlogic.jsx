@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import localRentals from "../../../../data/rentals.json";
+import localRentals from "../gouger/public/data/rentals.json";
 
 const RENTCAST_API_KEY = process.env.RENTCAST_API_KEY;
 

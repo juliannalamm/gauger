@@ -24,3 +24,5 @@ Thumbs.db
 # Ignore Playwright browser cache
 playwright/.cache
 
+node_modules/
+gouger/public/data/
