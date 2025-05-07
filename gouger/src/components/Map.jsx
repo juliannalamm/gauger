@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { getMarkerIcon } from "../lib/markerIcon";
 import customMapStyle from "../lib/mapStyle"; // adjust the path if needed
+import GougingSlider from "./GougingSlider"; // adjust path as needed
 
 import {
   DollarSign,
@@ -110,12 +111,20 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
               onCloseClick={() => setSelectedRental(null)}
             >
               <div className="-mt-2"> {/* <- negative top margin to pull content up */}
+
+
+                {selectedRental.fmrValue && selectedRental.price && (
+                  <GougingSlider
+                    fmr={selectedRental.fmrValue}
+                    price={selectedRental.price}
+                  />
+                )}
                 <div className="bg-white px-4 py-2 rounded-xl shadow-lg max-w-xs text-sm font-sans leading-snug">
                   {selectedRental.percentOverCutoff !== null && (
                     <h3
                       className={`text-sm font-semibold mb-1 uppercase tracking-wide ${selectedRental.percentOverCutoff > 0
-                          ? "text-red-600"
-                          : "text-green-600"
+                        ? "text-red-600"
+                        : "text-green-600"
                         }`}
                     >
                       {selectedRental.percentOverCutoff > 0 ? "+" : ""}
@@ -174,7 +183,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
                     )}
                   </p>
                 </div>
-                </div>
+              </div>
             </InfoWindow>
 
           )}
