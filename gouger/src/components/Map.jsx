@@ -110,81 +110,53 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
               }}
               onCloseClick={() => setSelectedRental(null)}
             >
-              <div className="-mt-2"> {/* <- negative top margin to pull content up */}
+              <div className="p-0 m-0">
+                <div className="bg-white px-8 py-5 rounded-xl shadow-xl w-[270px] text-sm font-sans leading-snug space-y-3">
 
-
-                {selectedRental.fmrValue && selectedRental.price && (
-                  <GougingSlider
-                    fmr={selectedRental.fmrValue}
-                    price={selectedRental.price}
-                  />
-                )}
-                <div className="bg-white px-4 py-2 rounded-xl shadow-lg max-w-xs text-sm font-sans leading-snug">
-                  {selectedRental.percentOverCutoff !== null && (
-                    <h3
-                      className={`text-sm font-semibold mb-1 uppercase tracking-wide ${selectedRental.percentOverCutoff > 0
-                        ? "text-red-600"
-                        : "text-green-600"
-                        }`}
+                  {/* Status message */}
+                  <div className="text-center">
+                    <p
+                      className={`font-semibold inline-flex items-center gap-2 ${selectedRental.isGouging ? "text-red-600" : "text-green-600"}`}
                     >
-                      {selectedRental.percentOverCutoff > 0 ? "+" : ""}
-                      {selectedRental.percentOverCutoff.toFixed(1)}% over gouging threshold
-                    </h3>
-                  )}
-                  <h2 className="text-base font-semibold text-gray-800 mb-3">
-                    {selectedRental.formattedAddress}
-                  </h2>
-
-                  <div className="space-y-2 text-gray-700">
-                    <p className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium">Price:</span> ${selectedRental.price}
+                      {selectedRental.isGouging ? (
+                        <>
+                          <ShieldX className="w-4 h-4" />
+                          Potential Rent Gouging
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-4 h-4" />
+                          Below 160% of FMR
+                        </>
+                      )}
                     </p>
-                    <p className="flex items-center gap-2">
-                      <BarChart2 className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium">Base Rent:</span> ${selectedRental.baseRent?.toFixed(0) || "N/A"}
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <Home className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium">FMR Used:</span> ${selectedRental.fmrValue?.toFixed(0) || "N/A"}
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-gray-500" />
-                      <span className="font-medium">Gouging Threshold:</span> ${selectedRental.fmrGougingCutoff?.toFixed(0) || "N/A"}
-                    </p>
-                    {/* <p className="flex items-center gap-2">
-                    <ScrollText className="w-4 h-4 text-gray-500" />
-                    <span className="font-medium">Has History:</span> {selectedRental.hasHistory ? "Yes" : "No"}
-                  </p> */}
-
-                    {selectedRental.hasHistory && selectedRental.percentIncrease !== null && (
-                      <p className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-gray-500" />
-                        <span className="font-medium">Increase:</span> {selectedRental.percentIncrease.toFixed(1)}%
-                      </p>
-                    )}
                   </div>
 
+                  {/* Slider */}
+                  {selectedRental.fmrValue && selectedRental.price && (
+                    <GougingSlider
+                      fmr={selectedRental.fmrValue}
+                      price={selectedRental.price}
+                      hasHistory={selectedRental.hasHistory}
+                      previousPrice={selectedRental.previousPrice}
+                    />
+                  )}
 
-                  <p
-                    className={`mt-3 font-semibold flex items-center gap-2 ${selectedRental.isGouging ? "text-red-600" : "text-green-600"
-                      }`}
-                  >
-                    {selectedRental.isGouging ? (
-                      <>
-                        <ShieldX className="w-4 h-4" />
-                        Potential Rent Gouging
-                      </>
-                    ) : (
-                      <>
-                        <ShieldCheck className="w-4 h-4" />
-                        Within Allowed Range
-                      </>
-                    )}
-                  </p>
+                  {/* Address */}
+                  <h2 className="text-center text-[15px] font-semibold text-gray-800 leading-tight">
+                    {selectedRental.formattedAddress.split(",")[0]}
+                    <br />
+                    <span className="text-sm font-normal text-gray-600">
+                      {selectedRental.formattedAddress.split(",").slice(1).join(",")}
+                    </span>
+                  </h2>
+
+                  {/* Price Details */}
+
                 </div>
               </div>
             </InfoWindow>
+
 
           )}
         </GoogleMap>
