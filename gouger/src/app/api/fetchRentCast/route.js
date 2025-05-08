@@ -82,35 +82,53 @@ function getBaseRent(listing, fmrData) {
 // ------------------------------------------------------------------
 // Utility: robust address → RentCast params
 // ------------------------------------------------------------------
+function startsWithDigit(str = "") {
+  return /^\d/.test(str);
+}
+
 function parseQuery(query) {
-  // 1. strip trailing ", USA"
+  // a) trim trailing ", USA"
   const cleaned = query.replace(/,\s*USA$/i, "").trim();
 
-  // 2. split on commas, trim, drop empties
+  // b) split on commas, trim, drop empties
   const parts = cleaned.split(",").map((p) => p.trim()).filter(Boolean);
-  if (parts.length === 0) return {};
+  if (!parts.length) return {};
 
-  // 3. last chunk: "CA" or "CA 90210"
+  // c) LAST chunk  = "CA" or "CA 90210"
   const [state, zipCode] = parts.pop().split(/\s+/);
   const params = { state };
   if (zipCode) params.zipCode = zipCode;
 
-  // 4. second‑last chunk (if any): city
+  // d) SECOND‑LAST chunk  (if present)
   if (parts.length) {
-    params.city = parts.pop();
+    let candidate = parts.pop();       // ← potential city _or_ address
 
-    // 5. anything left: street / neighbourhood
-    if (parts.length) params.address = parts.join(", ");
+    if (startsWithDigit(candidate)) {
+      // Looks like street address, so city must be the previous chunk
+      params.address = candidate;
+      if (parts.length) params.city = parts.pop();
+    } else {
+      // candidate has no digits → could be city or neighbourhood
+      if (parts.length && !startsWithDigit(parts[parts.length - 1])) {
+        // Two adjoining “no‑digit” chunks → treat *first* as city
+        params.city = candidate;               // Pacific Palisades
+        // drop the other chunk (“Los Angeles”) – it confuses RentCast
+      } else {
+        // Normal case: candidate is city
+        params.city = candidate;
+        // Anything left is street address (only keep if numeric)
+        if (parts.length && startsWithDigit(parts[parts.length - 1])) {
+          params.address = parts.join(", ");
+        }
+      }
+    }
   }
 
-  // Special case: user typed only "Los Angeles"
-  if (!params.city && !params.state && parts.length === 0) {
-    params.city = cleaned;
-  }
+  // e) Fallback: user typed only “Los Angeles”
+  if (!params.city && !params.state) params.city = cleaned;
 
   return params;
 }
-
 // ------------------------------------------------------------------
 // GET handler
 // ------------------------------------------------------------------
@@ -128,6 +146,7 @@ export async function GET(req) {
 
   const params = parseQuery(query);
   console.log("query → params", query, params);
+
 
   // --------------------------------------------------------------
   // LOCAL MODE: use pre‑scraped JSON from S3
