@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
+// ------------------------------------------------------------------
 // ENV vars
+// ------------------------------------------------------------------
 const useLocal = process.env.NEXT_PUBLIC_USE_LOCAL_RENTALS === "true";
 const rentalsUrl = process.env.RENTALS_JSON_URL;
 const fmrUrl = process.env.FMR_JSON_URL;
@@ -10,16 +12,16 @@ if (!RENTCAST_API_KEY) {
   console.warn("RENTCAST_API_KEY is not set. Live RentCast API mode may fail.");
 }
 
-// -------------------------
-// Shared function
-// -------------------------
+// ------------------------------------------------------------------
+// Utility: base‑rent / gouging calculation (unchanged)
+// ------------------------------------------------------------------
 function getBaseRent(listing, fmrData) {
   const zip = listing.zipCode?.toString();
   const bedrooms = listing.bedrooms || 1;
   const price = listing.price;
   const now = new Date();
 
-  const fmr = fmrData.find((entry) => entry.zip_code === zip);
+  const fmr = fmrData.find((e) => e.zip_code === zip);
   const fmrKey = `SAFMR_${bedrooms}BR`;
   const fmrRaw = fmr?.[fmrKey]?.replace(/[$,]/g, "");
   const fmrValue = fmrRaw ? Number(fmrRaw) : null;
@@ -77,37 +79,59 @@ function getBaseRent(listing, fmrData) {
   };
 }
 
+// ------------------------------------------------------------------
+// Utility: robust address → RentCast params
+// ------------------------------------------------------------------
+function parseQuery(query) {
+  // 1. strip trailing ", USA"
+  const cleaned = query.replace(/,\s*USA$/i, "").trim();
+
+  // 2. split on commas, trim, drop empties
+  const parts = cleaned.split(",").map((p) => p.trim()).filter(Boolean);
+  if (parts.length === 0) return {};
+
+  // 3. last chunk: "CA" or "CA 90210"
+  const [state, zipCode] = parts.pop().split(/\s+/);
+  const params = { state };
+  if (zipCode) params.zipCode = zipCode;
+
+  // 4. second‑last chunk (if any): city
+  if (parts.length) {
+    params.city = parts.pop();
+
+    // 5. anything left: street / neighbourhood
+    if (parts.length) params.address = parts.join(", ");
+  }
+
+  // Special case: user typed only "Los Angeles"
+  if (!params.city && !params.state && parts.length === 0) {
+    params.city = cleaned;
+  }
+
+  return params;
+}
+
+// ------------------------------------------------------------------
+// GET handler
+// ------------------------------------------------------------------
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("query");
   const limit = searchParams.get("limit") || "50";
 
   if (!query) {
-    return NextResponse.json({ error: "A ZIP code or address is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "A ZIP code or address is required" },
+      { status: 400 }
+    );
   }
 
-  const parts = query.replace(", USA", "").trim().split(",").map(p => p.trim());
-  let params = {};
+  const params = parseQuery(query);
+  console.log("query → params", query, params);
 
-  if (parts.length === 2) {
-    const [city, stateZip] = parts;
-    const [state, zipCode] = stateZip.split(" ");
-    if (state && zipCode) {
-      params = { city, state, zipCode };
-    }
-  } else if (parts.length === 3) {
-    const [address, city, stateZip] = parts;
-    const [state, zipCode] = stateZip.split(" ");
-    if (state && zipCode) {
-      params = { address, city, state, zipCode };
-    }
-  } else {
-    params = { city: query };
-  }
-
-  // -------------------------------
-  // LOCAL MODE: fetch from S3
-  // -------------------------------
+  // --------------------------------------------------------------
+  // LOCAL MODE: use pre‑scraped JSON from S3
+  // --------------------------------------------------------------
   if (useLocal) {
     console.log("Using local S3 rentals + FMR JSON");
 
@@ -126,49 +150,42 @@ export async function GET(req) {
     const localRentals = await rentalsRes.json();
     const fmrData = await fmrRes.json();
 
-    const filteredRentals = localRentals.filter((rental) => {
-      let match = true;
-      if (params.zipCode) {
-        match &&= rental.zipCode?.toString().includes(params.zipCode);
-      } else if (params.city) {
-        match &&= rental.city?.toLowerCase().includes(params.city.toLowerCase());
-      }
-      if (params.state) {
-        match &&= rental.state?.toLowerCase().includes(params.state.toLowerCase());
-      }
-      if (params.address) {
-        match &&= rental.address?.toLowerCase().includes(params.address.toLowerCase());
-      }
-      return match;
+    const filtered = localRentals.filter((rental) => {
+      let ok = true;
+      if (params.zipCode) ok &&= rental.zipCode?.toString().includes(params.zipCode);
+      else if (params.city) ok &&= rental.city?.toLowerCase().includes(params.city.toLowerCase());
+      if (params.state) ok &&= rental.state?.toLowerCase().includes(params.state.toLowerCase());
+      if (params.address) ok &&= rental.address?.toLowerCase().includes(params.address.toLowerCase());
+      return ok;
     });
 
-    const rentalsWithBase = filteredRentals
+    const rentalsWithBase = filtered
       .slice(0, Number(limit))
-      .map((rental) => ({
-        ...rental,
-        ...getBaseRent(rental, fmrData),
-      }));
+      .map((r) => ({ ...r, ...getBaseRent(r, fmrData) }));
 
     return NextResponse.json(rentalsWithBase);
   }
 
-  // -------------------------------
+  // --------------------------------------------------------------
   // PRODUCTION MODE: RentCast + S3 FMR
-  // -------------------------------
+  // --------------------------------------------------------------
   try {
     console.log("Using RentCast API");
 
-    const apiParams = {
-      status: "Active",
-      limit: limit.toString(),
-      ...params,
-    };
+    const cleanParams = Object.fromEntries(
+      Object.entries({
+        status: "Active",
+        limit: limit.toString(),
+        ...params,
+      }).filter(([, v]) => v != null && v !== "")
+    );
 
-    const requestUrl = `https://api.rentcast.io/v1/listings/rental/long-term?${new URLSearchParams(apiParams).toString()}`.replace(/\+/g, "%20");
+    const requestUrl =
+      "https://api.rentcast.io/v1/listings/rental/long-term?" +
+      new URLSearchParams(cleanParams).toString();
 
     const [rentalsRes, fmrRes] = await Promise.all([
       fetch(requestUrl, {
-        method: "GET",
         headers: {
           Accept: "application/json",
           "X-Api-Key": RENTCAST_API_KEY,
@@ -184,14 +201,17 @@ export async function GET(req) {
       throw new Error(`RentCast API Error: ${JSON.stringify(data)}`);
     }
 
-    const rentalsWithBase = data.map((rental) => ({
-      ...rental,
-      ...getBaseRent(rental, fmrData),
+    const rentalsWithBase = data.map((r) => ({
+      ...r,
+      ...getBaseRent(r, fmrData),
     }));
 
     return NextResponse.json(rentalsWithBase);
-  } catch (error) {
-    console.error("RentCast API Error:", error.message);
-    return NextResponse.json({ error: "Failed to fetch rentals" }, { status: 500 });
+  } catch (err) {
+    console.error("RentCast API Error:", err.message);
+    return NextResponse.json(
+      { error: "Failed to fetch rentals" },
+      { status: 500 }
+    );
   }
 }

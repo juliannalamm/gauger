@@ -168,7 +168,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
                     <div className="mt-2 text-sm text-gray-700 space-y-1">
                       <p><span className="font-medium">Listed Rent:</span> ${selectedRental.price.toLocaleString()}</p>
                       <p><span className="font-medium">Bed/Bath:</span> {selectedRental.bedrooms || "N/A"} Beds {selectedRental.bathrooms || "N/A"} Baths </p>
-                      <p><span className="font-medium">Latest Listing:</span> {selectedRental.lastSeenDate ? new Date(selectedRental.lastSeenDate).toLocaleDateString() : "N/A"}</p>
+                      <p><span className="font-medium">Last Upoda Listing:</span> {selectedRental.lastSeenDate ? new Date(selectedRental.lastSeenDate).toLocaleDateString() : "N/A"}</p>
                     </div>
                   )}
 
