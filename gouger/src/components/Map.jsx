@@ -34,6 +34,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
   const mapRef = useRef(null);
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
+  const [showMore, setShowMore] = useState(false);
 
   const [selectedRental, setSelectedRental] = useState(null);
   const [mapCenter, setMapCenter] = useState(LOS_ANGELES);
@@ -111,7 +112,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
               onCloseClick={() => setSelectedRental(null)}
             >
               <div className="p-0 m-0">
-                <div className="bg-white px-8 py-5 rounded-xl shadow-xl w-[270px] text-sm font-sans leading-snug space-y-3">
+                <div className="bg-white px-10 py-8 rounded-xl w-[270px] text-sm font-sans leading-snug space-y-3">
 
                   {/* Status message */}
                   <div className="text-center">
@@ -152,6 +153,24 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
                   </h2>
 
                   {/* Price Details */}
+                  <div className="text-center">
+                    <button
+                      onClick={() => setShowMore((prev) => !prev)}
+                      className="mt-0 inline-flex items-center px-1 py-1 border-2 border-orange-500 bg-orange-500 rounded-full text-white font-bold text-xs tracking-wide transition duration-300 hover:border-white hover:bg-red hover:text-black group"
+                    >
+                      <span>{showMore ? "HIDE DETAILS" : "SHOW DETAILS"}</span>
+                  
+                    </button>
+                  </div>
+
+                  {/* Expandable Info */}
+                  {showMore && (
+                    <div className="mt-2 text-sm text-gray-700 space-y-1">
+                      <p><span className="font-medium">Listed Rent:</span> ${selectedRental.price.toLocaleString()}</p>
+                      <p><span className="font-medium">Bed/Bath:</span> {selectedRental.bedrooms || "N/A"} Beds {selectedRental.bathrooms || "N/A"} Baths </p>
+                      <p><span className="font-medium">Latest Listing:</span> {selectedRental.lastSeenDate ? new Date(selectedRental.lastSeenDate).toLocaleDateString() : "N/A"}</p>
+                    </div>
+                  )}
 
                 </div>
               </div>
