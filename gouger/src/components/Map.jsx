@@ -21,7 +21,7 @@ import {
 
 const containerStyle = {
   width: "100%",
-  height: "400px",
+  height: "100%",
 };
 
 const LOS_ANGELES = { lat: 34.052235, lng: -118.243683 };
@@ -78,8 +78,8 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
   if (!isLoaded) return <div>Loading Map...</div>;
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="w-full max-w-5xl">
+    <div className="w-full sm:max-w-5xl flex flex-col items-center">
+    <div className="h-[275px] sm:h-[400px] w-full">
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={mapCenter}
@@ -194,7 +194,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
           id="autocomplete-input"
           placeholder="Search by LA neighborhood or ZIP"
           className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg shadow bg-white focus:ring-blue-500 focus:border-blue-500"
-          />
+        />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-500"
@@ -212,6 +212,10 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
           </svg>
         </div>
       </div>
+
+      {loading && (
+        <p className="mt-4 text-black text-sm italic">Loading rentals...</p>
+      )}
 
       {!loading && hasSearched && rentals.length === 0 && (
         <p className="mt-4 text-black text-sm italic">

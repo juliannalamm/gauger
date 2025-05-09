@@ -54,7 +54,7 @@ export default function Home() {
       <header className="text-6xl font-bold text-red-500 mb-6">Gouger</header>
 
       {/* MAP */}
-      <div className="w-full sm:w-[800px] max-w-5xl mx-auto h-[72vh] sm:h-[500px] overflow-hidden rounded-lg mb-4">
+      <div className=" w-screen -mx-4  sm:mx-auto sm:w-[800px] max-w-5xl h-[72vh] sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg mb-4">
         <MapComponent
           rentals={rentals}
           isLoaded={isLoaded}
