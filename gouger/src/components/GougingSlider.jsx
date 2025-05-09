@@ -1,64 +1,76 @@
 import React from "react";
-import { AlertTriangle } from "lucide-react"; // or ShieldExclamation, Info, etc.
-import { DollarSign } from "lucide-react"; // or Home, MapPin, etc.
-
+import {
+  AlertTriangle,
+  DollarSign,
+  ArrowBigLeft,
+  ArrowBigRight,
+} from "lucide-react";
 
 const GougingSlider = ({ fmr, price, hasHistory, previousPrice }) => {
-    if (!fmr || !price) return null;
+  if (!fmr || !price) return null;
 
-    const threshold = hasHistory ? previousPrice * 1.1 : fmr * 1.6;
-    const min = hasHistory ? previousPrice : fmr;
-    const max = threshold * 2; // Make threshold the center
+  /* ---------- numbers ----------------------------------------------------- */
+  const threshold = hasHistory ? previousPrice * 1.1 : fmr * 1.6;
 
-    console.log(
-        `Min: $${min.toFixed(0)}, Threshold: $${threshold.toFixed(0)}, Max: $${max.toFixed(0)}, Price: $${price}`
-    );
+  const MIN = 0;                  // left edge
+  const MAX = threshold * 2;      // right edge  (threshold is centred)
 
-    const clamp = (val, min, max) => Math.max(min, Math.min(val, max));
-    const toPercent = (val) => ((val - min) / (max - min)) * 100;
+  const clamp = (v) => Math.max(MIN, Math.min(v, MAX));
+  const toPercent = (v) => ((v - MIN) / (MAX - MIN)) * 100;
 
-    const pricePosition = toPercent(price);
-    const thresholdPercent = toPercent(threshold);
+  const pricePos  = toPercent(clamp(price));    // 0‥100 %
+  const threshPos = 50;                         // always middle
 
-    return (
-        <div className="my-6 w-full">
-            <div className="relative h-3 w-full rounded-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500">
-                {/* Marker for Gouging Threshold */}
-                {/* Threshold Marker Icon */}
-                <div
-                    className="absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
-                    style={{ left: `${thresholdPercent}%` }}
-                    title="Gouging Threshold"
-                >
-                    <AlertTriangle className="w-5 h-5 text-red-600 drop-shadow-md" />
+  const priceOverflow =
+    price < MIN ? "left" : price > MAX ? "right" : null;
 
-                    {/* Hover label */}
-                    <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 text-[11px] text-black font-semibold whitespace-nowrap px-2 py-0.5 rounded bg-white shadow opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        ${threshold.toFixed(0)} threshold
-                        {/* Little pointer arrow */}
-                        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white" />
-                    </div>
-                </div>
-
-                {/* Price Marker + Tooltip */}
-                <div
-                    className="absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 group"
-                    style={{ left: `${pricePosition}%` }}
-                >
-                    {/* Icon for price */}
-                    <DollarSign className="w-5 h-5 text-black drop-shadow-sm" />
-
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full mb-1 px-1.5 py-0.5 bg-white text-xs font-semibold text-black rounded shadow opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        ${price.toFixed(0)} listed rent
-                    </div>
-                </div>
-
-            </div>
-
-
+  /* ---------- render ------------------------------------------------------ */
+  return (
+    <div className="my-6 w-full">
+      {/* coloured bar : green → yellow → red with midpoint at 50 % */}
+      <div
+        className="relative h-3 w-full rounded-full"
+        style={{
+          background:
+            "linear-gradient(to right, #4ade80 0%, #fde047 50%, #f87171 100%)",
+        }}
+      >
+        {/* ⚠️  threshold marker & hover label */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 group cursor-pointer"
+          style={{ left: `${threshPos}%` }}
+          title="Gouging threshold"
+        >
+          <AlertTriangle className="w-5 h-5 text-yellow-500 drop-shadow-md" />
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold text-black bg-white px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            ${threshold.toFixed(0)} threshold
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white" />
+          </div>
         </div>
-    );
+
+        {/* 💲  price marker */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 group"
+          style={{ left: `${pricePos}%` }}
+        >
+          {priceOverflow === "left" && (
+            <ArrowBigLeft className="w-4 h-4 text-black" />
+          )}
+          {priceOverflow === "right" && (
+            <ArrowBigRight className="w-4 h-4 text-black" />
+          )}
+          {!priceOverflow && (
+            <DollarSign className="w-5 h-5 text-black drop-shadow-sm" />
+          )}
+
+          {/* price tooltip */}
+          <div className="absolute bottom-full mb-1 px-1.5 py-0.5 bg-white text-xs font-semibold text-black rounded shadow opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            ${price.toFixed(0)} listed rent
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default GougingSlider;
