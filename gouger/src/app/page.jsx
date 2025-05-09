@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import MapComponent from "../components/Map";
 import ExportButton from "../components/exportbutton";
+import TitleBanner from "../components/TitleBanner";
 
 const libraries = ["places"];
 
@@ -50,11 +51,12 @@ export default function Home() {
   if (!isLoaded) return <p>Loading Google Maps...</p>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-black-100 py-10 px-4">
-      <header className="text-6xl font-bold text-red-500 mb-6">Gouger</header>
+<div className="min-h-screen flex flex-col items-center">
+      <TitleBanner />
+
 
       {/* MAP */}
-      <div className=" w-screen -mx-4  sm:mx-auto sm:w-[800px] max-w-5xl h-[72vh] sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg mb-4">
+      <div className=" w-screen mt-20 -mx-4  sm:mx-auto sm:w-[800px] max-w-5xl h-[72vh] sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg mb-4">
         <MapComponent
           rentals={rentals}
           isLoaded={isLoaded}
