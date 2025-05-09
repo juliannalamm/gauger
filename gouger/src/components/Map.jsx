@@ -156,10 +156,13 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
                   <div className="text-center">
                     <button
                       onClick={() => setShowMore((prev) => !prev)}
-                      className="mt-0 inline-flex items-center px-1 py-1 border-2 border-orange-500 bg-orange-500 rounded-full text-white font-bold text-xs tracking-wide transition duration-300 hover:border-white hover:bg-red hover:text-black group"
+                      className={`mt-0 inline-flex items-center px-1 py-1 rounded-full text-white font-bold text-xs tracking-wide transition duration-300 group
+                      ${showMore
+                          ? "border-red-500 bg-red-500"
+                          : "border-orange-500 bg-orange-500 hover:border-white hover:bg-red-500"}
+  `}
                     >
                       <span>{showMore ? "HIDE DETAILS" : "SHOW DETAILS"}</span>
-                  
                     </button>
                   </div>
 
@@ -167,6 +170,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
                   {showMore && (
                     <div className="mt-2 text-sm text-gray-700 space-y-1">
                       <p><span className="font-medium">Listed Rent:</span> ${selectedRental.price.toLocaleString()}</p>
+                      <p><span className="font-medium">Fair Market Rate:</span> ${selectedRental.fmrValue.toLocaleString()}</p>
                       <p><span className="font-medium">Bed/Bath:</span> {selectedRental.bedrooms || "N/A"} Beds {selectedRental.bathrooms || "N/A"} Baths </p>
                       <p><span className="font-medium">Last Updated:</span> {selectedRental.lastSeenDate ? new Date(selectedRental.lastSeenDate).toLocaleDateString() : "N/A"}</p>
                     </div>

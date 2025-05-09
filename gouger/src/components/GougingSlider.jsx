@@ -36,13 +36,19 @@ const GougingSlider = ({ fmr, price, hasHistory, previousPrice }) => {
         }}
       >
         {/* ⚠️  threshold marker & hover label */}
-        <div
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 group cursor-pointer"
-          style={{ left: `${threshPos}%` }}
-          title="Gouging threshold"
+             {/* Threshold marker: thick black line */}
+             <div
+          className="group cursor-pointer"
+          style={{
+            position: "absolute",
+            left: `${threshPos}%`,
+            top: "-4px",            // rise above the bar slightly
+            transform: "translateX(-50%)",
+          }}
         >
-          <AlertTriangle className="w-5 h-5 text-yellow-500 drop-shadow-md" />
-          <div className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold text-black bg-white px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <div className="w-[3px] h-6 bg-black rounded-sm drop-shadow-sm" />
+          {/* on‑hover numeric label */}
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold text-black bg-white px-2 py-0.5 rounded shadow opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
             ${threshold.toFixed(0)} threshold
             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white" />
           </div>
@@ -54,10 +60,10 @@ const GougingSlider = ({ fmr, price, hasHistory, previousPrice }) => {
           style={{ left: `${pricePos}%` }}
         >
           {priceOverflow === "left" && (
-            <ArrowBigLeft className="w-4 h-4 text-black" />
+            <ArrowBigLeft className="w-5 h-5 fill-green-500 text-green-500" />
           )}
           {priceOverflow === "right" && (
-            <ArrowBigRight className="w-4 h-4 text-black" />
+            <ArrowBigRight className="w-5 h-5 fill-red-500 text-red-500" />
           )}
           {!priceOverflow && (
             <DollarSign className="w-5 h-5 text-black drop-shadow-sm" />
