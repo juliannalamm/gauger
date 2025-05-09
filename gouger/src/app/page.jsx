@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import MapComponent from "../components/Map";
+import ExportButton from "../components/exportbutton";
 
 const libraries = ["places"];
 
@@ -39,6 +40,7 @@ export default function Home() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     console.log("📍 Listings received:", rentals.length);
     const gouging = rentals.filter((r) => r.isGouging);
@@ -48,24 +50,28 @@ export default function Home() {
   if (!isLoaded) return <p>Loading Google Maps...</p>;
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center bg-black-100">
-      <header className="absolute top-4 text-6xl font-bold text-red-500 z-10">
-        Gouger
-      </header>
+    <div className="min-h-screen flex flex-col items-center bg-black-100 py-10 px-4">
+      <header className="text-6xl font-bold text-red-500 mb-6">Gouger</header>
 
-      <div className="w-[800px] rounded-lg overflow-hidden max-w-5xl mx-auto h-[500px] mb-10 mt-20">
+      {/* MAP */}
+      <div className="w-[800px] max-w-5xl mx-auto h-[500px] overflow-hidden rounded-lg mb-4">
         <MapComponent
           rentals={rentals}
           isLoaded={isLoaded}
           onSearch={handleSearch}
           loading={loading}
         />
-
       </div>
 
+      {/* EXPORT BUTTON OUTSIDE THE CLIPPED BOX */}
+      {rentals.length > 0 && (
+        <div className="mb-10">
+          <ExportButton rentals={rentals} filename="rentals.csv" />
+        </div>
+      )}
 
-      {loading && <p className="mt-2">Loading...</p>}
+      {/* LOADING TEXT */}
+      {loading && <p className="mt-2 text-black text-sm italic">Loading...</p>}
     </div>
   );
-
 }

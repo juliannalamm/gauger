@@ -5,6 +5,7 @@ import { GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
 import { getMarkerIcon } from "../lib/markerIcon";
 import customMapStyle from "../lib/mapStyle"; // adjust the path if needed
 import GougingSlider from "./GougingSlider"; // adjust path as needed
+import ExportButton from "./exportbutton";
 
 import {
   DollarSign,
@@ -16,6 +17,7 @@ import {
   ShieldCheck,
   ShieldX,
 } from "lucide-react";
+
 
 const containerStyle = {
   width: "100%",
@@ -212,11 +214,11 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
       </div>
 
       {loading && (
-        <p className="mt-4 text-gray-500 text-sm italic">Loading rentals...</p>
+        <p className="mt-4 text-black text-sm italic">Loading rentals...</p>
       )}
 
       {!loading && hasSearched && rentals.length === 0 && (
-        <p className="mt-4 text-gray-500 text-sm italic">
+        <p className="mt-4 text-black text-sm italic">
           No rentals found for this location.
         </p>
       )}
