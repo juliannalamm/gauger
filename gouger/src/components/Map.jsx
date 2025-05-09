@@ -187,14 +187,14 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
         </GoogleMap>
       </div>
 
-      <div className="mt-4 w-[32rem] relative">
+      <div className="mt-4 w-full max-w-md px-4 sm:px-0 relative">
         <input
           ref={inputRef}
           type="text"
           id="autocomplete-input"
-          placeholder="Enter a Los Angeles ZIP code"
+          placeholder="Search by LA neighborhood or ZIP"
           className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg shadow bg-white focus:ring-blue-500 focus:border-blue-500"
-        />
+          />
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <svg
             className="w-4 h-4 text-gray-500"
@@ -212,10 +212,6 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
           </svg>
         </div>
       </div>
-
-      {loading && (
-        <p className="mt-4 text-black text-sm italic">Loading rentals...</p>
-      )}
 
       {!loading && hasSearched && rentals.length === 0 && (
         <p className="mt-4 text-black text-sm italic">
