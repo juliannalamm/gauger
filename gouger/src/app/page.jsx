@@ -66,7 +66,8 @@ export default function Home() {
       <TitleBanner />
 
       <div className="w-screen mt-20 -mx-4 sm:mx-auto sm:w-[800px] max-w-5xl
-              h-auto sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg">        <MapComponent
+              h-auto sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg">        
+              <MapComponent
           rentals={rentals}
           isLoaded={isLoaded}
           onSearch={handleSearch}
@@ -74,7 +75,7 @@ export default function Home() {
           hasSearched={hasSearched}
         />
       </div>
-      <p className=" mb-4 text-sm text-gray-700 text-center italic">
+   <p className="mt-2 sm:-mt-5 mb-4 text-sm text-gray-700 text-center italic">
             Enter a search to reveal more listings
         </p>
         
