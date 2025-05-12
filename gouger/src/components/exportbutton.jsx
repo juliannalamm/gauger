@@ -1,16 +1,33 @@
-// components/DownloadCSVButton.jsx
 import React from "react";
-import { exportListingsToCSV } from "../lib/ExportCSV"; // adjust path if needed
+import { exportListingsToCSV } from "../lib/ExportCSV"; 
 
-const ExportButton = ({ rentals, filename = "rentals.csv" }) => {
+const ExportButton = ({ rentals, filename = "rentals.csv", variant = "all" }) => {
   if (!Array.isArray(rentals) || rentals.length === 0) return null;
+
+  const handleExport = () => {
+    const dataToExport =
+      variant === "gouging"
+        ? rentals.filter((r) => r.isGouging)
+        : rentals;
+
+    const file = variant === "gouging" ? "gouging_" + filename : filename;
+
+    exportListingsToCSV(dataToExport, file);
+  };
+
+  const baseClasses =
+    "px-2 py-1 font-semibold rounded transition";
+  const colorClasses =
+    variant === "gouging"
+      ? "bg-red-600 text-white hover:bg-red-700"
+      : "bg-green-600 text-white hover:bg-green-700";
 
   return (
     <button
-      onClick={() => exportListingsToCSV(rentals, filename)}
-      className="mt-2 px-2 py-1 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition"
+      onClick={handleExport}
+      className={`${baseClasses} ${colorClasses}`}
     >
-      Download CSV
+      {variant === "gouging" ? "Export Gouged Only" : "Export Listings"}
     </button>
   );
 };

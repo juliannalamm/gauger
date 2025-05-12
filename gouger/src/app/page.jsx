@@ -5,10 +5,14 @@ import { useLoadScript } from "@react-google-maps/api";
 import MapComponent from "../components/Map";
 import ExportButton from "../components/exportbutton";
 import TitleBanner from "../components/TitleBanner";
+import Navbar from "../components/NavBar"; // adjust path if needed
+
 
 const libraries = ["places"];
 
 export default function Home() {
+
+
   const [loading, setLoading] = useState(false);
   const [rentals, setRentals] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
@@ -58,9 +62,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center">
+        <Navbar />
       <TitleBanner />
 
-      <div className="w-screen mt-20 -mx-4 sm:mx-auto sm:w-[800px] max-w-5xl h-[72vh] sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg mb-4">
+      <div className="w-screen mt-20 -mx-4 sm:mx-auto sm:w-[800px] max-w-5xl h-[72vh] sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg">
         <MapComponent
           rentals={rentals}
           isLoaded={isLoaded}
@@ -71,12 +76,13 @@ export default function Home() {
       </div>
 
       {rentals.length > 0 && (
-        <div className="mb-10">
-          <ExportButton rentals={rentals} filename="rentals.csv" />
-        </div>
+       <div className="flex gap-4 mb-10">
+       <ExportButton rentals={rentals} filename="rentals.csv" variant="all" />
+       <ExportButton rentals={rentals} filename="rentals.csv" variant="gouging" />
+     </div>
       )}
 
-      {loading && <p className="mt-2 text-black text-sm italic">Loading...</p>}
+      {loading && <p className="mt-3 text-black text-sm italic">Loading...</p>}
     </div>
   );
 }
