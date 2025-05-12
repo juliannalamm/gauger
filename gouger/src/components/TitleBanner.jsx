@@ -9,7 +9,7 @@ export default function TitleBanner() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="w-screen bg-gradient-to-r from-red-100 via-green-50 to-green-100 shadow-sm border-b border-green-200 pt-20">
+    <header className="w-screen bg-gradient-to-r from-red-100 via-green-50 to-green-100 shadow-sm border-b border-green-200 pt-10">
       {/* Centered title + icon + tagline */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8  text-center">
         <div className="flex justify-center items-center gap-3">
