@@ -27,7 +27,8 @@ export default function TitleBanner() {
         </div>
 
         <p className="mt-2 mb-2 text-base sm:text-lg text-green-900 max-w-xl mx-auto font-regular">
-          A tool for detecting illegal rental price gouging during emergencies.
+          A tool designed to identify unlawful rent price gouging during states of emergency.
+
         </p>
       </div>
     </header>
