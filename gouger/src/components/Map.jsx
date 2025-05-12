@@ -79,7 +79,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
 
   return (
     <div className="w-full sm:max-w-5xl flex flex-col items-center">
-    <div className="h-[275px] sm:h-[400px] w-full">
+    <div className="h-[300px] sm:h-[400px] w-full">
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={mapCenter}
@@ -187,8 +187,8 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
         </GoogleMap>
       </div>
 
-      <div className="mt-4 w-full max-w-md px-4 sm:px-0 relative">
-        <input
+      <div className="mt-3 mb-1 w-full max-w-md px-4 sm:px-0 relative">        
+      <input
           ref={inputRef}
           type="text"
           id="autocomplete-input"
@@ -218,7 +218,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
       )}
 
       {!loading && hasSearched && rentals.length === 0 && (
-        <p className="mt-4 text-black text-sm italic">
+        <p className="mt-4 mb-4 text-black text-sm italic">
           No rentals found for this location.
         </p>
       )}

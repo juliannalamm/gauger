@@ -65,8 +65,8 @@ export default function Home() {
         <Navbar />
       <TitleBanner />
 
-      <div className="w-screen mt-20 -mx-4 sm:mx-auto sm:w-[800px] max-w-5xl h-[72vh] sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg">
-        <MapComponent
+      <div className="w-screen mt-20 -mx-4 sm:mx-auto sm:w-[800px] max-w-5xl
+              h-auto sm:h-[500px] overflow-hidden rounded-lg sm:rounded-lg">        <MapComponent
           rentals={rentals}
           isLoaded={isLoaded}
           onSearch={handleSearch}
@@ -74,7 +74,10 @@ export default function Home() {
           hasSearched={hasSearched}
         />
       </div>
-
+      <p className=" mb-4 text-sm text-gray-700 text-center italic">
+            Enter a search to reveal more listings
+        </p>
+        
       {rentals.length > 0 && (
        <div className="flex gap-4 mb-10">
        <ExportButton rentals={rentals} filename="rentals.csv" variant="all" />
