@@ -17,10 +17,10 @@ const ExportButton = ({ rentals, filename = "rentals.csv", variant = "all" }) =>
   };
 
   const label =
-    variant === "gouging" ? "Export Gouged Only" : "Export Listings";
+    variant === "gouging" ? "Gouged Listings" : "All Listings";
 
   const baseClasses =
-    "inline-flex items-center gap-2 px-5 py-2 rounded-full font-medium transition border";
+    "inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold transition border";
 
   const variantClasses =
     variant === "gouging"

@@ -13,7 +13,7 @@ const Section = ({ id, title, description, buttonText, href, isAlt }) => (
     } px-6 py-12 sm:px-10 sm:py-16 space-y-6`}
   >
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="uppercase text-sm tracking-widest text-gray-400 font-semibold">About</div>
+      <div className="uppercase text-sm tracking-widest text-gray-400 font-bold">About</div>
       <h2 className={`text-4xl sm:text-5xl font-bold ${isAlt ? "text-orange-400" : "text-orange-600"}`}>
         {title}
       </h2>
@@ -24,7 +24,7 @@ const Section = ({ id, title, description, buttonText, href, isAlt }) => (
         <div className="pt-4">
           <a
             href={href}
-            className="inline-block bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold tracking-wide py-3 px-6 rounded shadow"
+            className="inline-block bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wide py-3 px-6 rounded shadow"
           >
             {buttonText}
           </a>
@@ -41,7 +41,7 @@ export default function AboutPage() {
 
       {/* Hero Section */}
       <section className="py-20 px-6 sm:px-10 text-center w-full max-w-4xl mx-auto space-y-6 bg-white text-black">
-        <div className="uppercase text-sm tracking-widest font-semibold">About</div>
+        <div className="uppercase text-sm tracking-widest font-bold">About</div>
         <div className="flex justify-center items-center gap-4">
           <Image src="/icon.svg" alt="Gouger Icon" width={48} height={48} />
           <h1 className="text-4xl sm:text-5xl font-bold text-red-600">Gouger</h1>
@@ -66,7 +66,7 @@ export default function AboutPage() {
         <div>
           <a
             href="#features"
-            className="inline-block mt-4 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold tracking-wide py-3 px-6 rounded shadow"
+            className="inline-block mt-4 bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wide py-3 px-6 rounded shadow"
           >
             Learn More
           </a>

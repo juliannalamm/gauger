@@ -1,15 +1,5 @@
-import { Geist, Geist_Mono } from "next/font/google";
+// src/app/layout.jsx
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "Gouger - Rent Tracker",
@@ -19,9 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full bg-white text-white`}
-      >
+      <body className="font-sans antialiased h-full bg-white text-black">
         <div className="min-h-screen flex flex-col">{children}</div>
       </body>
     </html>
