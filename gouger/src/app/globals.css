@@ -1,9 +1,8 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* CSS Variables for background and text colors */
 :root {
   --background: rgb(0, 0, 0);
   --foreground: #ffffff;
@@ -16,8 +15,14 @@
   }
 }
 
+/* Make sure HTML and Body take full height */
+html {
+  height: 100%;
+  scroll-behavior: smooth
+}
+
 body {
-  @apply flex h-screen items-center justify-center text-center;
+  @apply min-h-screen text-left antialiased;
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
