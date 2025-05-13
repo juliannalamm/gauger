@@ -79,7 +79,7 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
 
   return (
     <div className="w-full sm:max-w-5xl flex flex-col items-center">
-    <div className="h-[300px] sm:h-[400px] w-full">
+      <div className="h-[300px] sm:h-[400px] w-full">
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={mapCenter}
@@ -172,8 +172,12 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
                   {showMore && (
                     <div className="mt-2 text-sm text-gray-700 space-y-1">
                       <p><span className="font-medium">Listed Rent:</span> ${selectedRental.price.toLocaleString()}</p>
-                      <p><span className="font-medium">Fair Market Rate:</span> ${selectedRental.fmrValue.toLocaleString()}</p>
-                      <p><span className="font-medium">Bed/Bath:</span> {selectedRental.bedrooms || "N/A"} Beds {selectedRental.bathrooms || "N/A"} Baths </p>
+                      <p>
+                        <span className="font-medium">Fair Market Rate:</span>{" "}
+                        {selectedRental.fmrValue != null
+                          ? `$${selectedRental.fmrValue.toLocaleString()}`
+                          : "N/A"}
+                      </p>                      <p><span className="font-medium">Bed/Bath:</span> {selectedRental.bedrooms || "N/A"} Beds {selectedRental.bathrooms || "N/A"} Baths </p>
                       <p><span className="font-medium">Last Updated:</span> {selectedRental.lastSeenDate ? new Date(selectedRental.lastSeenDate).toLocaleDateString() : "N/A"}</p>
                     </div>
                   )}
@@ -187,8 +191,8 @@ const MapComponent = ({ rentals, isLoaded, onSearch, loading }) => {
         </GoogleMap>
       </div>
 
-      <div className="mt-3 mb-1 w-full max-w-md px-4 sm:px-0 relative">        
-      <input
+      <div className="mt-3 mb-1 w-full max-w-md px-4 sm:px-0 relative">
+        <input
           ref={inputRef}
           type="text"
           id="autocomplete-input"
